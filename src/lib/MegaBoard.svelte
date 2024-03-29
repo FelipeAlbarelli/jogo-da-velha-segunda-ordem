@@ -61,11 +61,31 @@
 <style lang="scss">
 
 @keyframes rotating {
-  from {
-    transform:  perspective(360px) rotateY( 15deg) ;
+  0% {
+    transform:  perspective(360px)  rotateY( 15deg) ;
+    // filter: brightness( calc(  var(--filter , 0) + 1  ) );
   }
-  to {
-    transform:  perspective(360px) rotateY( -15deg)  ;
+  100% {
+    transform:  perspective(360px)  rotateY( -15deg) ;
+    filter: brightness( calc(  var(--filter , 0) + 1  ) );
+  }
+}
+
+@keyframes pump {
+  0% {
+    transform:  rotateZ(0) ;
+    // filter: brightness( calc(  var(--filter , 0) + 1  ) );
+  }
+  25% {
+    transform:  rotateZ(2deg) ;
+    // filter: brightness( calc(  var(--filter , 0) + 1  ) );
+  }
+  50% {
+    transform:  rotateZ(0) ;
+    // filter: brightness( calc(  var(--filter , 0) + 1  ) );
+  }
+  75% {
+    transform:  rotateZ(-2deg)
   }
 }
 
@@ -107,9 +127,10 @@
 
     &:hover {
       transition: all ease-in-out 200ms;
-      filter: brightness( var(--filter , 1.1) );
       // transform:   perspective(360px) rotateY(30deg);
-      animation: 250ms ease-in-out rotating alternate infinite;
+      animation: 
+        200ms linear pump ,
+        500ms linear 200ms rotating alternate infinite;
 
     } 
   }

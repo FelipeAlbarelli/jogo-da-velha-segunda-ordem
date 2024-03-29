@@ -11,7 +11,7 @@
   let name1 = 'Felipe'
   let name2 = 'Pedro'
   let hue: number = 30
-  let filter: number = 1.2
+  let filter: number = 0.2
   let deg: number = 30
 
 
@@ -43,7 +43,7 @@
       <div class="hue-selector">
         <label>
           <span>filter: {filter}</span>
-          <input type="range" bind:value={filter} min="0" max="4" step="0.05"  />
+          <input type="range" bind:value={filter} min="-1" max="1" step="0.05"  />
         </label>
         <label>
           <span>deg: {deg}</span>
