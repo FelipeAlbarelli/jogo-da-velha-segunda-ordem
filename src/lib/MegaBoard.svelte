@@ -1,8 +1,11 @@
 <script lang="ts">
   import { createEventDispatcher, onMount } from "svelte";
-  import { toggleState, type Board, type CellState, getBoardProjections } from "../game-logic/game";
+  import { toggleState, type Board, type CellState, getBoardProjections, type TurnState } from "../game-logic/game";
   import { emptyMegaBoard } from "../game-logic/matrix-helpers";
-  const dispath = createEventDispatcher()
+  const dispath = createEventDispatcher<{
+    winner: TurnState,
+    endTurn : null
+  }>()
 
   let labels = [
     '🐭', '🐲'
@@ -21,7 +24,9 @@
   //   console.log(b.state)
   // })
   
-  $: console.log(projectedState.finalWinner)
+  $: if (projectedState.finalWinner !== null) {
+    dispath('winner' , projectedState.finalWinner as TurnState)
+  }
 
 
 
@@ -44,8 +49,10 @@
         class:colored={board.state != null}
         class:p1={p1}
         class:p2={p2}
+
         on:mouseenter={ () => boardHoverDict[index] = true }
-        on:mouseleave={ () => delete boardHoverDict[index] }
+        on:mouseout ={ () => boardHoverDict[index] = false }
+        on:blur={() => boardHoverDict[index] = false}
         on:click={() => {
           if (board.state !== null) {
             return
@@ -110,6 +117,8 @@
   }
 
   .colored {
+
+    cursor: default;
     &.p1{
      background-color: hsl( var(--hue , 0)  var(--saturation , 100 )  var(--lightness , 50) );
 

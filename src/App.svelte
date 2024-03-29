@@ -5,13 +5,20 @@
   import { toggleState, type CellState } from './game-logic/game';
   import StyleSliders from './lib/StyleSliders.svelte';
   import { Maybe } from 'purify-ts/Maybe';
+  import Winner from './lib/Winner.svelte';
 
-  
   let saturation = 100
   let lightness  = 50
 
-  let name1 = 'Felipe'
-  let name2 = 'Pedro'
+  let player0 = 'Felipe'
+  let player1 = 'Pedro'
+
+  let winner: CellState = null
+
+  $: winnerName = Maybe.fromNullable(winner)
+    .chainNullable( w => w == 0 ? player0 : player1 )
+    .extractNullable()
+
   let hue: number = 30
   let filter: number = 0.2
 
@@ -24,22 +31,23 @@
     console.log(`turno atual: ${turn}`)
   } 
 
+
+
+
 </script>
 
 <main>
 
-  <div class="container">
-
-  </div>
-
+  {#if winnerName === null}
   <div class="card">
     <User 
-      bind:value={name1} 
+      bind:value={player0} 
       myTurn={turn1}      
     ></User>
     <div class="board-cont">
       <MegaBoard
         on:endTurn={ () => {turn = toggleState(turn)} }
+        on:winner={(event) => { winner = event.detail  }}
         turn={turn}
         --hue={hue}
         --filter={filter}
@@ -52,13 +60,17 @@
         bind:filter
         bind:lightness
       />
-      <Counter bind:count={turn} />
     </div>
     <User
-      bind:value={name2} 
+      bind:value={player1} 
       myTurn={!turn1}     
     ></User>
   </div>
+  {:else}
+  <Winner
+    bind:winner
+  />
+  {/if}
 
 </main>
 
