@@ -7,6 +7,9 @@
   import { Maybe } from 'purify-ts/Maybe';
   import Winner from './lib/Winner.svelte';
 
+  let labels = [
+    '🐭', '🐲'
+  ]
   let saturation = 100
   let lightness  = 50
 
@@ -18,6 +21,9 @@
   $: winnerName = Maybe.fromNullable(winner)
     .chainNullable( w => w == 0 ? player0 : player1 )
     .extractNullable()
+  $: winnerLabel = Maybe.fromNullable(winner)
+    .chainNullable( w => labels[w] )
+    .orDefault('')
 
   let hue: number = 30
   let filter: number = 0.2
@@ -68,8 +74,10 @@
   </div>
   {:else}
   <Winner
-    bind:winner
-  />
+    on:end={() => winner = null}
+  >
+    <h1> {winnerLabel} {winnerName} {winnerLabel} </h1>
+  </Winner>
   {/if}
 
 </main>

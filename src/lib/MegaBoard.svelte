@@ -2,6 +2,8 @@
   import { createEventDispatcher, onMount } from "svelte";
   import { toggleState, type Board, type CellState, getBoardProjections, type TurnState } from "../game-logic/game";
   import { emptyMegaBoard } from "../game-logic/matrix-helpers";
+
+
   const dispath = createEventDispatcher<{
     winner: TurnState,
     endTurn : null
@@ -77,35 +79,35 @@
 
 
 <style lang="scss">
+  @keyframes rotating {
+    0% {
+      transform:  perspective(360px)  rotateY( 15deg) ;
+      // filter: brightness( calc(  var(--filter , 0) + 1  ) );
+    }
+    100% {
+      transform:  perspective(360px)  rotateY( -15deg) ;
+      filter: brightness( calc(  var(--filter , 0) + 1  ) );
+    }
+  }
 
-@keyframes rotating {
-  0% {
-    transform:  perspective(360px)  rotateY( 15deg) ;
-    // filter: brightness( calc(  var(--filter , 0) + 1  ) );
+  @keyframes pump {
+    0% {
+      transform:  rotateZ(0) ;
+      // filter: brightness( calc(  var(--filter , 0) + 1  ) );
+    }
+    25% {
+      transform:  rotateZ(2deg) ;
+      // filter: brightness( calc(  var(--filter , 0) + 1  ) );
+    }
+    50% {
+      transform:  rotateZ(0) ;
+      // filter: brightness( calc(  var(--filter , 0) + 1  ) );
+    }
+    75% {
+      transform:  rotateZ(-2deg)
+    }
   }
-  100% {
-    transform:  perspective(360px)  rotateY( -15deg) ;
-    filter: brightness( calc(  var(--filter , 0) + 1  ) );
-  }
-}
 
-@keyframes pump {
-  0% {
-    transform:  rotateZ(0) ;
-    // filter: brightness( calc(  var(--filter , 0) + 1  ) );
-  }
-  25% {
-    transform:  rotateZ(2deg) ;
-    // filter: brightness( calc(  var(--filter , 0) + 1  ) );
-  }
-  50% {
-    transform:  rotateZ(0) ;
-    // filter: brightness( calc(  var(--filter , 0) + 1  ) );
-  }
-  75% {
-    transform:  rotateZ(-2deg)
-  }
-}
 
   .boards {
 
