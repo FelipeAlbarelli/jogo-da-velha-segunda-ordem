@@ -1,11 +1,22 @@
-<script>
+<script lang="ts">
     export let filter     = 0.1;
     export let hue        = 30;
     export let saturation = 100;
     export let lightness  = 50;
+
+    let state : 'show' | 'hide' = 'hide'
+    const otherState = (state : 'show' | 'hide') => state == 'hide' ? 'show' : 'hide' 
+    const toggleState = () => {
+        state = otherState(state)
+    }
+
 </script>
 
-<div class="hue-selector">
+<button on:click={toggleState} >{otherState(state)}</button>
+<div 
+    class:hide={state == 'hide'}
+    class="hue-selector"
+>
     <label>
       <span>filter: {filter}</span>
       <input type="range" bind:value={filter} min="-1" max="1" step="0.05"  />
@@ -28,6 +39,13 @@
 .hue-selector {
     display: flex;
     flex-direction: column;
+
+    transition: all 500ms ;
+
+    &.hide {
+        height: 0px;
+        overflow: hidden;
+    }
 
     &>label{
       display: flex;

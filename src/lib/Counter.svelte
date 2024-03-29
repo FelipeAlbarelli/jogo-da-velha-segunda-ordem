@@ -1,14 +1,12 @@
 <script lang="ts">
-  import type { TurnState } from "../game-logic/game";
+  import { toggleState, type CellState } from "../game-logic/game";
   import {Maybe} from 'purify-ts'
 
-  export let count: TurnState;
+  export let count: CellState;
   const increment = () => {
     count = Maybe.fromNullable(count)
-      .chainNullable( c => c + 1 )
-      .chainNullable< 0 | 1>( c => (c % 2) as 0 | 1 )
+      .chainNullable( toggleState )
       .extractNullable()
-    
   }
 </script>
 

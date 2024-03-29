@@ -1,42 +1,33 @@
 <script lang="ts">
   import { createEventDispatcher, onMount } from "svelte";
-  import type { Board, TurnState } from "../game-logic/game";
+  import { toggleState, type Board, type CellState, getBoardProjections } from "../game-logic/game";
+  import { emptyMegaBoard } from "../game-logic/matrix-helpers";
   const dispath = createEventDispatcher()
-
-  export let turn : TurnState = null
-  export let hue : number = 0;
-
-  $:hueInv = (hue + 180) % 360
-
-
-
-  let saturation = 100
-  let lightness  = 50
 
   let labels = [
     '🐭', '🐲'
   ]
+  export let turn : CellState = null
 
-  let boards :Board[] = []
+  $: currentPlayerLabel = turn != null ? labels[turn] : '?'
+
+
+  let boards : Board[] = emptyMegaBoard()
+  $:  projectedState = getBoardProjections(boards)
+
+  const boardHoverDict : Record<number , boolean> = {}
+
+  // $: boards.forEach(b => {
+  //   console.log(b.state)
+  // })
   
-  const emptyBoard = (i : number) : Board => {
-    const matrix = [
-      0,0,0,
-      0,0,0,
-      0,0,0] as Board['matrix']
-    return {
-      matrix,
-      index: i
-    }
-    
-  }
+  $: console.log(projectedState.finalWinner)
 
-  onMount(() => {
-    for (let index = 0; index < 9; index++) {
-      const board = emptyBoard(index)
-      boards = [...boards , board];
-    }
-  });
+
+
+  const checkForWinner = (boards:  Board[]) => {
+  
+  }
 
 </script>
 
@@ -46,15 +37,35 @@
     {#each boards as board (board.index) }
     {@const isOdd = board.index % 2}
     {@const index = board.index}
-      <div
-        style="background-color: {isOdd ? hue : hueInv};"
-        class="board"  
-        class:odd={isOdd} 
+    {@const p1 = board.state == 0}
+    {@const p2 = board.state == 1}
+      <button
+        class="board"
+        class:colored={board.state != null}
+        class:p1={p1}
+        class:p2={p2}
+        on:mouseenter={ () => boardHoverDict[index] = true }
+        on:mouseleave={ () => delete boardHoverDict[index] }
+        on:click={() => {
+          if (board.state !== null) {
+            return
+          }
+          board.state = turn;
+          dispath('endTurn')
+        }}
       >
-        {labels[index % 2]}
-      </div>
+        {#if board.state != null}
+        {labels[board.state]}
+        {:else if  boardHoverDict[index]}
+        {currentPlayerLabel}
+        {/if}
+      </button>
     {/each}
   </div>
+
+  <button
+    on:click={()=> boards = emptyMegaBoard()}
+  >clear</button>
 
 
 
@@ -98,6 +109,22 @@
     gap: 4px;
   }
 
+  .colored {
+    &.p1{
+     background-color: hsl( var(--hue , 0)  var(--saturation , 100 )  var(--lightness , 50) );
+
+      // background-color: hsl(, saturation, lightness) ;
+    }
+
+    &.p2 {
+      // background-color: ;
+     background-color: hsl( calc(
+        180 + (var(--hue , 0) ) ) 
+        var(--saturation , 100 )  
+        var(--lightness , 50) );
+    }
+  }
+
   .board {
     height: 100px;
     width: 100px;
@@ -107,30 +134,17 @@
     align-items: center;
     perspective: 300px;
     perspective-origin: 50% 50%;
-
     transform-style: preserve-3d;
 
-    &.odd{
-     background-color: hsl( var(--hue , 0)  var(--saturation , 100 )  var(--lightness , 50) );
-
-      // background-color: hsl(, saturation, lightness) ;
-    }
-
-    &:not(.odd) {
-      // background-color: ;
-     background-color: hsl( calc(
-        180 + (var(--hue , 0) ) ) 
-        var(--saturation , 100 )  
-        var(--lightness , 50) );
-
-    }
+    // background-color: #ddd;
+    border: 4px solid #eee;
 
     &:hover {
       transition: all ease-in-out 200ms;
       // transform:   perspective(360px) rotateY(30deg);
       animation: 
-        200ms linear pump ,
-        500ms linear 200ms rotating alternate infinite;
+        // 200ms linear pump ,
+        500ms linear rotating alternate infinite;
 
     } 
   }

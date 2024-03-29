@@ -2,8 +2,9 @@
   import User from './lib/User.svelte';
   import Counter from './lib/Counter.svelte'
   import MegaBoard from './lib/MegaBoard.svelte';
-  import type { TurnState } from './game-logic/game';
+  import { toggleState, type CellState } from './game-logic/game';
   import StyleSliders from './lib/StyleSliders.svelte';
+  import { Maybe } from 'purify-ts/Maybe';
 
   
   let saturation = 100
@@ -13,11 +14,15 @@
   let name2 = 'Pedro'
   let hue: number = 30
   let filter: number = 0.2
-  let deg: number = 30
 
-
-  let turn : TurnState = 0
+  let turn : CellState = 0
   $: turn1 = turn == 0;
+
+  const handleTurn = () => {
+    if (turn == null){return}
+    turn =  toggleState(turn);
+    console.log(`turno atual: ${turn}`)
+  } 
 
 </script>
 
@@ -33,9 +38,9 @@
       myTurn={turn1}      
     ></User>
     <div class="board-cont">
-      <MegaBoard 
-        bind:turn
-        hue={hue}
+      <MegaBoard
+        on:endTurn={ () => {turn = toggleState(turn)} }
+        turn={turn}
         --hue={hue}
         --filter={filter}
         --saturation={saturation + '%'}
@@ -50,8 +55,8 @@
       <Counter bind:count={turn} />
     </div>
     <User
-    bind:value={name2} 
-    myTurn={!turn1}     
+      bind:value={name2} 
+      myTurn={!turn1}     
     ></User>
   </div>
 
