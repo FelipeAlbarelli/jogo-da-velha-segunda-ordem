@@ -58,6 +58,7 @@
   .boards {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
+    gap: 4px;
   }
 
   .board {
@@ -77,6 +78,10 @@
         var(--lightness , 50) );
 
     }
+
+    &:hover {
+      filter: brightness( var(--filter , 0.7) );
+    } 
   }
 
 </style>

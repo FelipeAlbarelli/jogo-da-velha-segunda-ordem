@@ -11,7 +11,6 @@
     class="card"
     class:myTurn={myTurn}
     >
-    {myTurn}
     <input 
       type="text" 
       name="nome"

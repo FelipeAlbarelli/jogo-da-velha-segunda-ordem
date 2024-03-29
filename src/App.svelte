@@ -10,7 +10,8 @@
 
   let name1 = 'Felipe'
   let name2 = 'Pedro'
-  let hue: number
+  let hue: number = 30
+  let filter: number = 1
 
 
   let turn : TurnState = 0
@@ -34,10 +35,15 @@
         bind:turn
         hue={hue}
         --hue={hue}
+        --filter={filter}
         --saturation={saturation + '%'}
         --lightness={lightness + '%'}
       />
       <div class="hue-selector">
+        <label>
+          <span>filter: {filter}</span>
+          <input type="range" bind:value={filter} min="0" max="4" step="0.05"  />
+        </label>
         <label>
           <span>hue: {hue}</span>
           <input type="range" bind:value={hue} min="0" max="180" />
@@ -61,22 +67,34 @@
 
 </main>
 
-<style>
+<style lang="scss">
 
-.hue-selector {
-  display: flex;
-  flex-direction: column;
-}
+  .hue-selector {
+    display: flex;
+    flex-direction: column;
+
+    &>label{
+      display: flex;
+      &>span {
+        width: 100px;
+      }
+      
+    }
+
+    input {
+      flex-grow: 1;
+    }
+  }
 
   .card {
     display: flex;
     flex-direction: row;
+    gap: 32px;
   }
 
   .board-cont {
     display: flex;
     flex-direction: column;
-
   }
 
 </style>
