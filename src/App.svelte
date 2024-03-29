@@ -3,6 +3,7 @@
   import Counter from './lib/Counter.svelte'
   import MegaBoard from './lib/MegaBoard.svelte';
   import type { TurnState } from './game-logic/game';
+  import StyleSliders from './lib/StyleSliders.svelte';
 
   
   let saturation = 100
@@ -40,28 +41,12 @@
         --saturation={saturation + '%'}
         --lightness={lightness + '%'}
       />
-      <div class="hue-selector">
-        <label>
-          <span>filter: {filter}</span>
-          <input type="range" bind:value={filter} min="-1" max="1" step="0.05"  />
-        </label>
-        <label>
-          <span>deg: {deg}</span>
-          <input type="range" bind:value={deg} min="0" max="90" step="1"  />
-        </label>
-        <label>
-          <span>hue: {hue}</span>
-          <input type="range" bind:value={hue} min="0" max="180" />
-        </label>
-        <label>
-          <span>sat: {saturation}</span>
-          <input type="range" bind:value={saturation} min="0" max="100" />
-        </label>
-        <label>
-          <span>hue: {lightness}</span>
-          <input type="range" bind:value={lightness} min="0" max="100" />
-        </label> 
-      </div>
+      <StyleSliders 
+        bind:saturation
+        bind:hue
+        bind:filter
+        bind:lightness
+      />
       <Counter bind:count={turn} />
     </div>
     <User
@@ -74,22 +59,7 @@
 
 <style lang="scss">
 
-  .hue-selector {
-    display: flex;
-    flex-direction: column;
 
-    &>label{
-      display: flex;
-      &>span {
-        width: 100px;
-      }
-      
-    }
-
-    input {
-      flex-grow: 1;
-    }
-  }
 
   .card {
     display: flex;
