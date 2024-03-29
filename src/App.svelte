@@ -11,7 +11,8 @@
   let name1 = 'Felipe'
   let name2 = 'Pedro'
   let hue: number = 30
-  let filter: number = 1
+  let filter: number = 1.2
+  let deg: number = 30
 
 
   let turn : TurnState = 0
@@ -43,6 +44,10 @@
         <label>
           <span>filter: {filter}</span>
           <input type="range" bind:value={filter} min="0" max="4" step="0.05"  />
+        </label>
+        <label>
+          <span>deg: {deg}</span>
+          <input type="range" bind:value={deg} min="0" max="90" step="1"  />
         </label>
         <label>
           <span>hue: {hue}</span>
