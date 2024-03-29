@@ -4,11 +4,14 @@
   import MegaBoard from './lib/MegaBoard.svelte';
   import type { TurnState } from './game-logic/game';
 
+  
+  let saturation = 100
+  let lightness  = 50
 
   let name1 = 'Felipe'
   let name2 = 'Pedro'
-  let hue2: number
-  let hue1: number
+  let hue: number
+
 
   let turn : TurnState = 0
   $: turn1 = turn == 0;
@@ -28,14 +31,26 @@
     ></User>
     <div class="board-cont">
       <MegaBoard 
-        bind:hue1
-        bind:hue2
         bind:turn
+        hue={hue}
+        --hue={hue}
+        --saturation={saturation + '%'}
+        --lightness={lightness + '%'}
       />
-      <label>
-        <input type="range" bind:value={hue1} min="0" max="180" />
-        <input type="range" bind:value={hue2} min="0" max="180" />
-      </label>
+      <div class="hue-selector">
+        <label>
+          <span>hue: {hue}</span>
+          <input type="range" bind:value={hue} min="0" max="180" />
+        </label>
+        <label>
+          <span>sat: {saturation}</span>
+          <input type="range" bind:value={saturation} min="0" max="100" />
+        </label>
+        <label>
+          <span>hue: {lightness}</span>
+          <input type="range" bind:value={lightness} min="0" max="100" />
+        </label> 
+      </div>
       <Counter bind:count={turn} />
     </div>
     <User
@@ -47,6 +62,11 @@
 </main>
 
 <style>
+
+.hue-selector {
+  display: flex;
+  flex-direction: column;
+}
 
   .card {
     display: flex;

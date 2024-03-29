@@ -4,9 +4,14 @@
   const dispath = createEventDispatcher()
 
   export let turn : TurnState = null
-  export let hue1 : number = 0;
-  export let hue2 : number = 90;
+  export let hue : number = 0;
 
+  $:hueInv = (hue + 180) % 360
+
+
+
+  let saturation = 100
+  let lightness  = 50
 
   let boards :Board[] = []
   
@@ -34,19 +39,19 @@
   <div 
     class="boards"
     >
-    {#each boards as board }
-
+    {#each boards as board (board.index) }
+    {@const isOdd = board.index % 2}
       <div
-        style="background-color: hsl({(board.index % 2) ? hue1 : hue2}, 100% , 50%)"
-        class="board"
-          
+        style="background-color: {isOdd ? hue : hueInv};"
+        class="board"  
+        class:odd={isOdd} 
       >
-
+        {isOdd % 2 ? hue : hueInv}
       </div>
-      
     {/each}
-
   </div>
+
+
 
 <style lang="scss">
 
@@ -58,13 +63,19 @@
   .board {
     height: 100px;
     width: 100px;
-
     &.odd{
+     background-color: hsl( var(--hue , 0)  var(--saturation , 100 )  var(--lightness , 50) );
+
       // background-color: hsl(, saturation, lightness) ;
     }
 
     &:not(.odd) {
       // background-color: ;
+     background-color: hsl( calc(
+        180 + (var(--hue , 0) ) ) 
+        var(--saturation , 100 )  
+        var(--lightness , 50) );
+
     }
   }
 
