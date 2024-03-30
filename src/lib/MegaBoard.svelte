@@ -28,7 +28,8 @@
   }
 
   $: {
-    console.log(projectedState)
+    console.log([...projectedState.projectedState ,])
+    console.log(boards)
   }
 
   let prevWinner: number | null = null

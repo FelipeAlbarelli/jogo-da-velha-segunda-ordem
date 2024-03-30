@@ -11,8 +11,8 @@
   let saturation = 100
   let lightness  = 50
 
-  let player0 = '123'
-  let player1 = 'Pedro'
+  let player0 = ''
+  let player1 = ''
 
 
 
@@ -51,12 +51,12 @@
     <div class="board-cont">
       <MegaBoard
       />
-      <StyleSliders 
+      <!-- <StyleSliders 
         bind:saturation
         bind:hue
         bind:filter
         bind:lightness
-      />
+      /> -->
     </div>
     <User
       bind:value={player1}

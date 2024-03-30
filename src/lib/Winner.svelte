@@ -16,7 +16,6 @@ import { Fireworks } from 'fireworks-js'
       },
 
     })
-    console.log(mouseInside)
   }
   
   onMount( () => {
@@ -38,7 +37,7 @@ import { Fireworks } from 'fireworks-js'
     setTimeout( () => {
       fireworks
       dispath('end')
-    }, 100_500)
+    }, 5_000)
   })
 
 </script>

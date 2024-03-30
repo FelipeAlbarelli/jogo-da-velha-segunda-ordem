@@ -28,6 +28,7 @@ export const getBoardProjections = ( board : Board[] ) => {
     const winnerPerLine = projectedState.map( (line) => {
         const [a,b,c] = line
         if (a == b && b == c) {
+            console.log(line)
             return a
         }
         return null

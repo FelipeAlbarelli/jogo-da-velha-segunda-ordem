@@ -12,7 +12,6 @@
   $: calc_named = me?.name ?? '--'
   $: my_id = me?.id ?? 0
   playersStore.subscribe( s => {
-    console.log(s)
     const myState = selectPlayer(s , witchPlayer)
     me = myState;
   })
