@@ -1,9 +1,5 @@
 <script lang="ts">
-  import { createEventDispatcher } from "svelte";
-  import { getNewPlayer } from "../game-logic/zodiac-heavenly-aritmetic";
   import { createNewPlayerFromName,  playersStore, getMyObj } from "../store/players.store";
-  import type { Player } from "../game-logic/game";
-  import PlayerMark from "./PlayerMark.svelte";
   import Emoji from "./dumbComps/Emoji.svelte";
 
   export let name  = '';

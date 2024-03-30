@@ -51,11 +51,12 @@ export const getRandom12UniqNumber = ({ min = 0 , current , max = 11 } :{current
     const maxNorm     = max     - min;
 
     /** use modulo based arit to get n \in [0 , maxNorm] & n != currNorm  */
-    const offset      = Math.floor( Math.random() * maxNorm - 1 )
+    const offset      = randIntOnInterval({min : 1 , max, type : 'int'})
     const resultNorm  = ( currNorm + offset ) % maxNorm
 
     // add min to get previous based number
     return resultNorm + min
+    
 
 }
 
