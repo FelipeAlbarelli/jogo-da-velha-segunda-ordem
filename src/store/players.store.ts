@@ -63,13 +63,6 @@ export const currentPlayer = derived(playersStore , ({p1, p2 , turn}) => {
     return null
 })
 
-export const playersIds = derived(playersStore , ({p1, p2 , turn}) => {
-    return {
-        p1 : p1?.zodiacId ?? null,
-        p2 : p2?.zodiacId ?? null
-    }
-})
-
 export const bothPlayersReady = derived( playersStore , ({p1,p2}) => p1 !== null && p2 !== null)
 
 /**HELPERS */

@@ -3,7 +3,7 @@
   import { toggleState, type Board, type CellState, getBoardProjections, type PlayersIds, type Player } from "../game-logic/game";
   import { emptyMegaBoard } from "../game-logic/matrix-helpers";
   import PlayerMark from "./PlayerMark.svelte";
-  import { currentPlayer as currentPlayerComputed, makePlayerMove, playersIds, playersStore } from "../store/players.store";
+  import { currentPlayer as currentPlayerComputed, makePlayerMove, playersStore } from "../store/players.store";
   import DomBoard from "./dumbComps/DomBoard.svelte";
 
 

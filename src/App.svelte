@@ -11,8 +11,8 @@
   let saturation = 100
   let lightness  = 50
 
-  let player0 = ''
-  let player1 = ''
+  let p1InitName = 'Felipe'
+  let p2InitName = 'Pedro'
 
 
 
@@ -44,7 +44,7 @@
   {#if $winnerPlayer == null }
   <div class="card">
     <User 
-      bind:name={player0}
+      bind:name={p1InitName}
       witchPlayer={1}
       --playerColor={30} 
     ></User>
@@ -53,7 +53,7 @@
       />
     </div>
     <User
-      bind:name={player1}
+      bind:name={p2InitName}
       witchPlayer={2}
       --playerColor={30 + 180}  
     ></User>

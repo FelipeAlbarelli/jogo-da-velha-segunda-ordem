@@ -1,6 +1,10 @@
 <script lang="ts">
-  import { currentPlayer, makePlayerMove, megaBoard, playersIds } from "../../store/players.store";
+  import { currentPlayer, makePlayerMove, megaBoard, playersStore } from "../../store/players.store";
   import PlayerMark from "../PlayerMark.svelte";
+
+  megaBoard.subscribe( s => {
+    console.log(s.map( x => x.state ))
+  })
 
 </script>
 
@@ -18,8 +22,8 @@ class="boards"
     class="board"
     class:beforeGame={currentPlayer == null}
     class:colored={board.state != null}
-    class:p1={board.state == $playersIds.p1}
-    class:p2={board.state == $playersIds.p2}
+    class:p1={board.state == $playersStore.p1?.id}
+    class:p2={board.state == $playersStore.p2?.id}
     on:click={() => makePlayerMove(index) }
   >
     {#if board.state != null}
@@ -32,30 +36,27 @@ class="boards"
 <style lang="scss">
   .boards {
 
-perspective-origin: 50% 50%;
+    perspective-origin: 50% 50%;
 
-display: grid;
-grid-template-columns: 1fr 1fr 1fr;
-gap: 4px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 4px;
 
-}
+  }
 
 .colored {
 
-cursor: default;
-&.p1{
- background-color: hsl( var(--hue , 30)  var(--saturation , 100% )  var(--lightness , 50%) );
+  cursor: default;
+  &.p1{
+  background-color: hsl(30, 50%, 50%);
 
-  // background-color: hsl(, saturation, lightness) ;
-}
+    // background-color: hsl(, saturation, lightness) ;
+  }
 
-&.p2 {
-  // background-color: ;
- background-color: hsl( 
-  calc( 180 + (var(--hue , 30) ) ) 
-    var(--saturation , 100% )  
-    var(--lightness , 50%) );
-}
+  &.p2 {
+    // background-color: ;
+  background-color: hsl(210, 50%, 50%)
+  }
 
 
 }
