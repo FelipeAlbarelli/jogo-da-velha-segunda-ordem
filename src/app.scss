@@ -95,7 +95,7 @@ button:disabled {
   }
   100% {
     transform:  perspective(360px)  rotateY( -15deg) ;
-    filter: brightness( calc(  var(--filter , 0) + 1  ) );
+    filter: brightness( calc(  var(--filter , 0.1) + 1  ) );
   }
 }
 

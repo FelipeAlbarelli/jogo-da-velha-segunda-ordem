@@ -21,7 +21,7 @@ class="boards"
   <div
     style=" cursor : {$currentPlayer == null ? 'not-allowed' : 'pointer'} "
     class="board"
-    class:beforeGame={currentPlayer == null}
+    class:beforeGame={$currentPlayer == null}
     class:colored={board.state != null}
     class:p1={board.state == $playersStore.p1?.id}
     class:p2={board.state == $playersStore.p2?.id}
@@ -85,6 +85,7 @@ button.beforeGame {
 
 &:hover:not(.beforeGame) {
   transition: all ease-in-out 200ms;
+  filter: brightness(1.1);
   // transform:   perspective(360px) rotateY(30deg);
   animation: 
     // 200ms linear pump ,

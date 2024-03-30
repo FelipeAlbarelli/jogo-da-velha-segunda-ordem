@@ -41,15 +41,15 @@
       on:click={getReady}>
     Start</button>
     {:else}
-    <h4>{myself.name}</h4>
+    <h4 class="atention" >{myself.name}</h4>
     <Emoji>
-      <p>{myself.label}</p>
+      <p class="atention" >{myself.label}</p>
     </Emoji>
     {/if}
   </div>
 
 
-<style>
+<style lang="scss" >
 
   h4  {
     font-size: 30px;
@@ -62,12 +62,28 @@
     width: 180px;
   }
 
+  .atention {
+    transition: all 200ms linear;
+  }
+
   .myTurn {
     --color: hsl( var(--playerColor , 30) 100%  50% );
     outline: 4px solid;
     outline-color: var(--color);
     outline-style: dotted;
     outline-offset: 16px;
+
+    .atention {
+      // transform: scale(1.5);
+      filter: brightness(1.25);
+      transform: scale(1.4);
+        // drop-shadow(2px 2px 0px hsl( var(--playerColor , 30) 100%  50% )) 
+        // drop-shadow(2px 2px 0px white ) 
+        // drop-shadow(2px 2px 0px hsl( var(--playerColor , 30) 100%  50% )) 
+        // drop-shadow(2px 2px 0px white ) 
+    }
+
+    
   }
 
 
