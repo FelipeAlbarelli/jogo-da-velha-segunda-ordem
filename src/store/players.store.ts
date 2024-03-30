@@ -1,5 +1,5 @@
 import { derived, writable } from 'svelte/store';
-import type { Board, Player } from '../game-logic/game';
+import { getBoardProjections, type Board, type Player } from '../game-logic/game';
 import { getNewPlayer } from '../game-logic/zodiac-heavenly-aritmetic';
 import { Maybe } from 'purify-ts';
 import { produce } from 'immer';
@@ -10,7 +10,6 @@ type State = {
     p2: Player | null,
     onGame : boolean,
     turn: null |1 | 2,
-    winner: 1 | 2 | null,
     board: Board[],
 }
 
@@ -18,17 +17,17 @@ export const playersStore = writable<State>({
     p1: null,
     p2: null,
     turn: null,
-    winner: null,
     board : emptyMegaBoard(),
     onGame: false,
 });
 
 /**DERIVED */
 
-export const winnerPlayer = derived( playersStore , ({p1 ,p2 , winner}) => {
-    if (winner == p1?.id) {
+export const winnerPlayer = derived( playersStore , ({p1 ,p2 , board}) => {
+    const { finalWinner } = getBoardProjections( board )
+    if (finalWinner == p1?.id) {
         return p1
-    } else if (winner == p2?.id) {
+    } else if (finalWinner == p2?.id) {
         return p2
     }
     return null
@@ -41,16 +40,6 @@ export const megaBoard = derived( playersStore , ({board , p1 , p2}) => {
             .chainNullable( state => getMyObj({p1, p2 } , state ))
             .extractNullable() 
     }))
-} )
-
-export const winner = derived( playersStore , ({winner, p1, p2}) => {
-    if (winner == 1) {
-        return p1 as Player
-    }
-    if (winner == 2) {
-        return p2 as Player
-    }
-    return null
 } )
 
 export const currentPlayer = derived(playersStore , ({p1, p2 , turn}) => {
@@ -104,10 +93,11 @@ export const createNewPlayerFromName = (name: string , wich : 1 | 2) => {
     })
 }
 
-export const chooseFirstPlayerTurn = () => {
+export const startGame = () => {
     const oneOrTwo = (Math.floor(Math.random() * 2) + 1) as 1 | 2
     playersStore.update( state => ({
         ...state,
+        onGame: true,
         turn: oneOrTwo
     }))
 }
@@ -127,4 +117,14 @@ export const makePlayerMove = (boardIndex : number) => {
             turn : nextTurn
         }
     })
+}
+
+export const resetGame = () => {
+    const oneOrTwo = (Math.floor(Math.random() * 2) + 1) as 1 | 2
+    playersStore.update( prev => ({
+        ...prev,
+        board: emptyMegaBoard(),
+        onGame: true,
+        turn: oneOrTwo
+    }))
 }

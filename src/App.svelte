@@ -6,7 +6,7 @@
   import StyleSliders from './lib/StyleSliders.svelte';
   import { Maybe } from 'purify-ts/Maybe';
   import Winner from './lib/Winner.svelte';
-  import { chooseFirstPlayerTurn, playersStore, winnerPlayer } from './store/players.store';
+  import { startGame, playersStore, winnerPlayer, resetGame } from './store/players.store';
 
   let saturation = 100
   let lightness  = 50
@@ -23,18 +23,9 @@
     const bothReady = s.p1 != null && s.p2 != null;
     const currentTurn = s.turn
     if (bothReady && currentTurn == null) {
-      chooseFirstPlayerTurn()
+      startGame()
     }
   })
-
-
-  const reset = () => {
-    playersStore.update( state => ({
-      ...state,
-      turn: null,
-      winner: null
-    }) )
-  }
 
 
 </script>
@@ -60,7 +51,7 @@
   </div>
   {:else}
   <Winner
-    on:end={() => reset()}
+    on:end={() => resetGame()}
   >
     <h1> {$winnerPlayer.label} {$winnerPlayer.name} {$winnerPlayer.label} </h1>
   </Winner>

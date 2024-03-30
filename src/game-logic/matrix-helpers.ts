@@ -36,9 +36,9 @@ export const allWinningsIndexes = () => {
 
 const emptyBoard = (i : number) : Board => {
     const matrix = [
-      0,0,0,
-      0,0,0,
-      0,0,0] as Board['matrix']
+      null,null,null,
+      null,null,null,
+      null,null,null] as Board['matrix']
     return {
       matrix,
       state: null,

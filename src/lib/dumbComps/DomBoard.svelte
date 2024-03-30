@@ -1,6 +1,7 @@
 <script lang="ts">
   import { currentPlayer, makePlayerMove, megaBoard, playersStore } from "../../store/players.store";
   import PlayerMark from "../PlayerMark.svelte";
+  import Emoji from "./Emoji.svelte";
 
   megaBoard.subscribe( s => {
     console.log(s.map( x => x.state ))
@@ -27,7 +28,9 @@ class="boards"
     on:click={() => makePlayerMove(index) }
   >
     {#if board.state != null}
+    <Emoji>
       {board.player?.label}
+    </Emoji>
     {/if}
   </div>
 {/each}
@@ -62,18 +65,18 @@ class="boards"
 }
 
 .board {
-height: 100px;
-width: 100px;
-font-size: 40px;
-display: flex;
-justify-content: center;
-align-items: center;
-perspective: 300px;
-perspective-origin: 50% 50%;
-transform-style: preserve-3d;
+  height: 100px;
+  width: 100px;
+  font-size: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  perspective: 300px;
+  perspective-origin: 50% 50%;
+  transform-style: preserve-3d;
 
-// background-color: #ddd;
-border: 4px solid #eee;
+  // background-color: #ddd;
+  border: 4px solid #eee;
 
 
 button.beforeGame {

@@ -4,6 +4,7 @@
   import { createNewPlayerFromName,  playersStore, getMyObj } from "../store/players.store";
   import type { Player } from "../game-logic/game";
   import PlayerMark from "./PlayerMark.svelte";
+  import Emoji from "./dumbComps/Emoji.svelte";
 
   export let name  = '';
 
@@ -41,12 +42,19 @@
     Start</button>
     {:else}
     <h4>{myself.name}</h4>
-    <p>{myself.label}</p>
+    <Emoji>
+      <p>{myself.label}</p>
+    </Emoji>
     {/if}
   </div>
 
 
 <style>
+
+  h4  {
+    font-size: 30px;
+    margin: 0;
+  }
 
   .card {
     display: flex;
