@@ -7,7 +7,11 @@
   import { Maybe } from 'purify-ts/Maybe';
   import Winner from './lib/Winner.svelte';
   import { startGame, playersStore, winnerPlayer, resetGame } from './store/players.store';
+  import Tabs from './navigation/Tabs.svelte';
+  import { mainTabs, type Tab } from './navigation/constants';
 
+
+  let tabs = mainTabs
   let saturation = 100
   let lightness  = 50
 
@@ -30,37 +34,65 @@
 
 </script>
 
-<main>
 
-  {#if $winnerPlayer == null }
-  <div class="card">
-    <User 
-      bind:name={p1InitName}
-      witchPlayer={1}
-      --playerColor={30} 
-    ></User>
-    <div class="board-cont">
-      <MegaBoard
-      />
-    </div>
-    <User
-      bind:name={p2InitName}
-      witchPlayer={2}
-      --playerColor={30 + 180}  
-    ></User>
+  <div class="header">
+    <Tabs
+      tabs={mainTabs}
+    ></Tabs>
   </div>
-  {:else}
-  <Winner
-    on:end={() => resetGame()}
-  >
-    <h1> {$winnerPlayer.label} {$winnerPlayer.name} {$winnerPlayer.label} </h1>
-  </Winner>
-  {/if}
 
-</main>
+  <main>
+  
+  
+    {#if $winnerPlayer == null }
+    <div class="card">
+      <User 
+        bind:name={p1InitName}
+        witchPlayer={1}
+        --playerColor={30} 
+      ></User>
+      <div class="board-cont">
+        <MegaBoard
+        />
+      </div>
+      <User
+        bind:name={p2InitName}
+        witchPlayer={2}
+        --playerColor={30 + 180}  
+      ></User>
+    </div>
+    {:else}
+    <Winner
+      on:end={() => resetGame()}
+    >
+      <h1> {$winnerPlayer.label} {$winnerPlayer.name} {$winnerPlayer.label} </h1>
+    </Winner>
+    {/if}
+  
+  </main>
+  <div class="footer"></div>
+
 
 <style lang="scss">
 
+  .header{
+    // height: 120px;
+    position: absolute;
+    top: 0;
+    width: 100vw;
+
+  }
+
+  .footer{
+
+  }
+
+  main {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 
 
   .card {
