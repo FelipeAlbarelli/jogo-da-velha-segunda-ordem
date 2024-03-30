@@ -1,93 +1,161 @@
 <script lang="ts">
   import { createEventDispatcher, onMount } from "svelte";
-  import type { Board, TurnState } from "../game-logic/game";
-  const dispath = createEventDispatcher()
-
-  export let turn : TurnState = null
-  export let hue : number = 0;
-
-  $:hueInv = (hue + 180) % 360
+  import { toggleState, type Board, type CellState, getBoardProjections, type PlayersIds, type Player } from "../game-logic/game";
+  import { emptyMegaBoard } from "../game-logic/matrix-helpers";
+  import PlayerMark from "./PlayerMark.svelte";
+  import { currentPlayer as currentPlayerComputed, nextPlayer, playersIds, playersStore, setWinnerByIdz } from "../store/players.store";
 
 
+  const dispath = createEventDispatcher<{
+    winner: PlayersIds,
+    endTurn : null
+  }>()
 
-  let saturation = 100
-  let lightness  = 50
+  export let turn : CellState = null
 
-  let labels = [
-    '🐭', '🐲'
-  ]
+  let boards : Board[] = emptyMegaBoard()
+  $:  projectedState = getBoardProjections(boards)
 
-  let boards :Board[] = []
+  const boardHoverDict : Record<number , boolean> = {}
+
+  // $: boards.forEach(b => {
+  //   console.log(b.state)
+  // })
   
-  const emptyBoard = (i : number) : Board => {
-    const matrix = [
-      0,0,0,
-      0,0,0,
-      0,0,0] as Board['matrix']
-    return {
-      matrix,
-      index: i
-    }
-    
+  $: if (projectedState.finalWinner !== null) {
+    setWinnerByIdz(projectedState.finalWinner);
+    dispath('winner' , projectedState.finalWinner as PlayersIds)
   }
 
-  onMount(() => {
-    for (let index = 0; index < 9; index++) {
-      const board = emptyBoard(index)
-      boards = [...boards , board];
+  $: {
+    console.log([...projectedState.projectedState ,])
+    console.log(boards)
+  }
+
+  let prevWinner: number | null = null
+  playersStore.subscribe( ({winner}) => {
+    if (winner == prevWinner) {
+      return
     }
-  });
+    if (winner != null) {
+      boards = emptyMegaBoard();
+      prevWinner = winner;
+    }
+  } )
+
+  let currentPlayer : Partial<Player> = {}
+  currentPlayerComputed.subscribe( (x) => {
+    if ( x == null) {
+      return
+    }
+    currentPlayer = x
+  })
+
+  const mouseHandler = (index : number , val: boolean) => {
+    boardHoverDict[index] = val
+  }
+
+  const click = (b: Board , i : number) => {
+    if (b.state !== null || currentPlayer == null) {
+      return
+    }
+    boards = boards.map( board => {
+      if (board.index !== i) {
+        return board
+      }
+      return {
+        ...board,
+        state: currentPlayer.id ?? turn
+      }
+    })
+    nextPlayer()
+    dispath('endTurn')
+  }
+
+
 
 </script>
-
   <div 
-    class="boards"
+    class="container"
+    class:beforeGame={$currentPlayerComputed == null}
+    
     >
-    {#each boards as board (board.index) }
-    {@const isOdd = board.index % 2}
-    {@const index = board.index}
-      <div
-        style="background-color: {isOdd ? hue : hueInv};"
-        class="board"  
-        class:odd={isOdd} 
+    <div 
+      class="boards"
       >
-        {labels[index % 2]}
-      </div>
-    {/each}
+      {#each boards as board (board.index) }
+      {@const index = board.index}
+        <button
+          style=" cursor : {$currentPlayerComputed == null ? 'not-allowed' : 'pointer'} "
+          class="board"
+          class:beforeGame={$currentPlayerComputed == null}
+          class:colored={board.state != null}
+          class:p1={board.state == $playersIds.p1}
+          class:p2={board.state == $playersIds.p2}
+          on:click={() => click(board, index)}
+        >
+          {#if board.state != null}
+            <PlayerMark 
+            on:click={() => {click(board , index)}}
+            id={board.state} />
+          {/if}
+        </button>
+      {/each}
+    </div>
+  
+  
+    <button
+      on:click={()=> boards = emptyMegaBoard()}
+    >
+      clear
+    </button>
   </div>
 
 
 
+
+
 <style lang="scss">
+  @keyframes rotating {
+    0% {
+      transform:  perspective(360px)  rotateY( 15deg) ;
+      // filter: brightness( calc(  var(--filter , 0) + 1  ) );
+    }
+    100% {
+      transform:  perspective(360px)  rotateY( -15deg) ;
+      filter: brightness( calc(  var(--filter , 0) + 1  ) );
+    }
+  }
 
-@keyframes rotating {
-  0% {
-    transform:  perspective(360px)  rotateY( 15deg) ;
-    // filter: brightness( calc(  var(--filter , 0) + 1  ) );
+  @keyframes pump {
+    0% {
+      transform:  rotateZ(0) ;
+      // filter: brightness( calc(  var(--filter , 0) + 1  ) );
+    }
+    25% {
+      transform:  rotateZ(2deg) ;
+      // filter: brightness( calc(  var(--filter , 0) + 1  ) );
+    }
+    50% {
+      transform:  rotateZ(0) ;
+      // filter: brightness( calc(  var(--filter , 0) + 1  ) );
+    }
+    75% {
+      transform:  rotateZ(-2deg)
+    }
   }
-  100% {
-    transform:  perspective(360px)  rotateY( -15deg) ;
-    filter: brightness( calc(  var(--filter , 0) + 1  ) );
-  }
-}
 
-@keyframes pump {
-  0% {
-    transform:  rotateZ(0) ;
-    // filter: brightness( calc(  var(--filter , 0) + 1  ) );
+
+  .container {
+    display: flex;
+    flex-direction: column;
+    cursor: not-allowed;
   }
-  25% {
-    transform:  rotateZ(2deg) ;
-    // filter: brightness( calc(  var(--filter , 0) + 1  ) );
+  
+
+  .beforeGame {
+    filter: blur(10px)
   }
-  50% {
-    transform:  rotateZ(0) ;
-    // filter: brightness( calc(  var(--filter , 0) + 1  ) );
-  }
-  75% {
-    transform:  rotateZ(-2deg)
-  }
-}
 
   .boards {
 
@@ -96,6 +164,27 @@
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     gap: 4px;
+
+  }
+
+  .colored {
+
+    cursor: default;
+    &.p1{
+     background-color: hsl( var(--hue , 30)  var(--saturation , 100% )  var(--lightness , 50%) );
+
+      // background-color: hsl(, saturation, lightness) ;
+    }
+
+    &.p2 {
+      // background-color: ;
+     background-color: hsl( 
+      calc( 180 + (var(--hue , 30) ) ) 
+        var(--saturation , 100% )  
+        var(--lightness , 50%) );
+    }
+
+
   }
 
   .board {
@@ -107,30 +196,22 @@
     align-items: center;
     perspective: 300px;
     perspective-origin: 50% 50%;
-
     transform-style: preserve-3d;
 
-    &.odd{
-     background-color: hsl( var(--hue , 0)  var(--saturation , 100 )  var(--lightness , 50) );
+    // background-color: #ddd;
+    border: 4px solid #eee;
 
-      // background-color: hsl(, saturation, lightness) ;
+
+    button.beforeGame {
+      cursor: not-allowed;
     }
 
-    &:not(.odd) {
-      // background-color: ;
-     background-color: hsl( calc(
-        180 + (var(--hue , 0) ) ) 
-        var(--saturation , 100 )  
-        var(--lightness , 50) );
-
-    }
-
-    &:hover {
+    &:hover:not(.beforeGame) {
       transition: all ease-in-out 200ms;
       // transform:   perspective(360px) rotateY(30deg);
       animation: 
-        200ms linear pump ,
-        500ms linear 200ms rotating alternate infinite;
+        // 200ms linear pump ,
+        500ms linear rotating alternate infinite;
 
     } 
   }

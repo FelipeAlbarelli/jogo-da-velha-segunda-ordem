@@ -13,6 +13,9 @@
   -moz-osx-font-smoothing: grayscale;
 
   --color-1 : #82017b;
+
+
+  
 }
 
 a {
@@ -38,7 +41,7 @@ h1 {
 }
 
 .card {
-  padding: 2em;
+  padding: 8px;
 }
 
 #app {
@@ -66,16 +69,22 @@ button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
+button:disabled {
+  border: 0px;
+  filter: brightness(0.8);
+}
 
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
     background-color: #ffffff;
   }
-  a:hover {
+  a:hover:not(:disabled ) {
     color: #747bff;
   }
   button {
     background-color: #f9f9f9;
   }
 }
+
+

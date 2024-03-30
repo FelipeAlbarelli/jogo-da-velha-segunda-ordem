@@ -20,6 +20,8 @@
     "vite": "^5.2.0"
   },
   "dependencies": {
+    "@fireworks-js/svelte": "^2.10.7",
+    "@tsparticles/svelte": "^3.0.0",
     "purify-ts": "^2.0.3"
   }
 }
