@@ -1,21 +1,17 @@
 <script lang="ts">
   import { createEventDispatcher, onMount } from "svelte";
-  import { toggleState, type Board, type CellState, getBoardProjections, type TurnState } from "../game-logic/game";
+  import { toggleState, type Board, type CellState, getBoardProjections, type PlayersIds, type Player } from "../game-logic/game";
   import { emptyMegaBoard } from "../game-logic/matrix-helpers";
+  import PlayerMark from "./PlayerMark.svelte";
+  import { currentPlayer as currentPlayerComputed, nextPlayer, playersIds, playersStore, setWinnerByIdz } from "../store/players.store";
 
 
   const dispath = createEventDispatcher<{
-    winner: TurnState,
+    winner: PlayersIds,
     endTurn : null
   }>()
 
-  let labels = [
-    '🐭', '🐲'
-  ]
   export let turn : CellState = null
-
-  $: currentPlayerLabel = turn != null ? labels[turn] : '?'
-
 
   let boards : Board[] = emptyMegaBoard()
   $:  projectedState = getBoardProjections(boards)
@@ -27,54 +23,94 @@
   // })
   
   $: if (projectedState.finalWinner !== null) {
-    dispath('winner' , projectedState.finalWinner as TurnState)
+    setWinnerByIdz(projectedState.finalWinner);
+    dispath('winner' , projectedState.finalWinner as PlayersIds)
+  }
+
+  $: {
+    console.log(projectedState)
+  }
+
+  let prevWinner: number | null = null
+  playersStore.subscribe( ({winner}) => {
+    if (winner == prevWinner) {
+      return
+    }
+    if (winner != null) {
+      boards = emptyMegaBoard();
+      prevWinner = winner;
+    }
+  } )
+
+  let currentPlayer : Partial<Player> = {}
+  currentPlayerComputed.subscribe( (x) => {
+    if ( x == null) {
+      return
+    }
+    currentPlayer = x
+  })
+
+  const mouseHandler = (index : number , val: boolean) => {
+    boardHoverDict[index] = val
+  }
+
+  const click = (b: Board , i : number) => {
+    if (b.state !== null || currentPlayer == null) {
+      return
+    }
+    boards = boards.map( board => {
+      if (board.index !== i) {
+        return board
+      }
+      return {
+        ...board,
+        state: currentPlayer.id ?? turn
+      }
+    })
+    nextPlayer()
+    dispath('endTurn')
   }
 
 
-
-  const checkForWinner = (boards:  Board[]) => {
-  
-  }
 
 </script>
-
   <div 
-    class="boards"
+    class="container"
+    class:beforeGame={$currentPlayerComputed == null}
+    
     >
-    {#each boards as board (board.index) }
-    {@const isOdd = board.index % 2}
-    {@const index = board.index}
-    {@const p1 = board.state == 0}
-    {@const p2 = board.state == 1}
-      <button
-        class="board"
-        class:colored={board.state != null}
-        class:p1={p1}
-        class:p2={p2}
-
-        on:mouseenter={ () => boardHoverDict[index] = true }
-        on:mouseout ={ () => boardHoverDict[index] = false }
-        on:blur={() => boardHoverDict[index] = false}
-        on:click={() => {
-          if (board.state !== null) {
-            return
-          }
-          board.state = turn;
-          dispath('endTurn')
-        }}
+    <div 
+      class="boards"
       >
-        {#if board.state != null}
-        {labels[board.state]}
-        {:else if  boardHoverDict[index]}
-        {currentPlayerLabel}
-        {/if}
-      </button>
-    {/each}
+      {#each boards as board (board.index) }
+      {@const index = board.index}
+        <button
+          style=" cursor : {$currentPlayerComputed == null ? 'not-allowed' : 'pointer'} "
+          class="board"
+          class:beforeGame={$currentPlayerComputed == null}
+          class:colored={board.state != null}
+          class:p1={board.state == $playersIds.p1}
+          class:p2={board.state == $playersIds.p2}
+          on:click={() => click(board, index)}
+        >
+          {#if board.state != null}
+            <PlayerMark 
+            on:click={() => {click(board , index)}}
+            id={board.state} />
+          {/if}
+        </button>
+      {/each}
+    </div>
+  
+  
+    <button
+      on:click={()=> boards = emptyMegaBoard()}
+    >
+      clear
+    </button>
   </div>
 
-  <button
-    on:click={()=> boards = emptyMegaBoard()}
-  >clear</button>
+
 
 
 
@@ -109,6 +145,17 @@
   }
 
 
+  .container {
+    display: flex;
+    flex-direction: column;
+    cursor: not-allowed;
+  }
+  
+
+  .beforeGame {
+    filter: blur(10px)
+  }
+
   .boards {
 
     perspective-origin: 50% 50%;
@@ -116,24 +163,27 @@
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     gap: 4px;
+
   }
 
   .colored {
 
     cursor: default;
     &.p1{
-     background-color: hsl( var(--hue , 0)  var(--saturation , 100 )  var(--lightness , 50) );
+     background-color: hsl( var(--hue , 30)  var(--saturation , 100% )  var(--lightness , 50%) );
 
       // background-color: hsl(, saturation, lightness) ;
     }
 
     &.p2 {
       // background-color: ;
-     background-color: hsl( calc(
-        180 + (var(--hue , 0) ) ) 
-        var(--saturation , 100 )  
-        var(--lightness , 50) );
+     background-color: hsl( 
+      calc( 180 + (var(--hue , 30) ) ) 
+        var(--saturation , 100% )  
+        var(--lightness , 50%) );
     }
+
+
   }
 
   .board {
@@ -150,7 +200,12 @@
     // background-color: #ddd;
     border: 4px solid #eee;
 
-    &:hover {
+
+    button.beforeGame {
+      cursor: not-allowed;
+    }
+
+    &:hover:not(.beforeGame) {
       transition: all ease-in-out 200ms;
       // transform:   perspective(360px) rotateY(30deg);
       animation: 

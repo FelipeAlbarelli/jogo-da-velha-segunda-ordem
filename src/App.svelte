@@ -6,59 +6,50 @@
   import StyleSliders from './lib/StyleSliders.svelte';
   import { Maybe } from 'purify-ts/Maybe';
   import Winner from './lib/Winner.svelte';
+  import { areBothReady, chooseFirstPlayerTurn, playersStore , winner} from './store/players.store';
 
-  let labels = [
-    '🐭', '🐲'
-  ]
   let saturation = 100
   let lightness  = 50
 
-  let player0 = 'Felipe'
+  let player0 = '123'
   let player1 = 'Pedro'
 
-  let winner: CellState = null
 
-  $: winnerName = Maybe.fromNullable(winner)
-    .chainNullable( w => w == 0 ? player0 : player1 )
-    .extractNullable()
-  $: winnerLabel = Maybe.fromNullable(winner)
-    .chainNullable( w => labels[w] )
-    .orDefault('')
 
   let hue: number = 30
   let filter: number = 0.2
 
-  let turn : CellState = 0
-  $: turn1 = turn == 0;
+  playersStore.subscribe( s => {
+    const bothReady = areBothReady(s)
+    const currentTurn = s.turn
+    if (bothReady && currentTurn == null) {
+      chooseFirstPlayerTurn()
+    }
+  })
 
-  const handleTurn = () => {
-    if (turn == null){return}
-    turn =  toggleState(turn);
-    console.log(`turno atual: ${turn}`)
-  } 
 
-
+  const reset = () => {
+    playersStore.update( state => ({
+      ...state,
+      turn: null,
+      winner: null
+    }) )
+  }
 
 
 </script>
 
 <main>
 
-  {#if winnerName === null}
+  {#if $winner === null}
   <div class="card">
     <User 
-      bind:value={player0} 
-      myTurn={turn1}      
+      bind:value={player0}
+      witchPlayer={1}
+      --playerColor={30} 
     ></User>
     <div class="board-cont">
       <MegaBoard
-        on:endTurn={ () => {turn = toggleState(turn)} }
-        on:winner={(event) => { winner = event.detail  }}
-        turn={turn}
-        --hue={hue}
-        --filter={filter}
-        --saturation={saturation + '%'}
-        --lightness={lightness + '%'}
       />
       <StyleSliders 
         bind:saturation
@@ -68,15 +59,16 @@
       />
     </div>
     <User
-      bind:value={player1} 
-      myTurn={!turn1}     
+      bind:value={player1}
+      witchPlayer={2}
+      --playerColor={30 + 180}  
     ></User>
   </div>
   {:else}
   <Winner
-    on:end={() => winner = null}
+    on:end={() => reset()}
   >
-    <h1> {winnerLabel} {winnerName} {winnerLabel} </h1>
+    <h1> {$winner.label} {$winner.name} {$winner.label} </h1>
   </Winner>
   {/if}
 

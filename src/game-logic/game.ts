@@ -1,8 +1,14 @@
 import { Maybe } from "purify-ts";
 import { allWinningsIndexes } from "./matrix-helpers";
 
-export type CellState = 0 | 1 | null;
-export type TurnState     = 0 | 1;
+export type CellState = PlayersIds | null;
+export type PlayersIds     = number;
+
+export type Player = {
+    id: PlayersIds,
+    label: string,
+    name: string
+}
 
 export type Board = {
     matrix : CellState[],
@@ -20,11 +26,9 @@ export const getBoardProjections = ( board : Board[] ) => {
         relevantIndexes.map( i => board[i].state ) as [CellState , CellState , CellState]
     )
     const winnerPerLine = projectedState.map( (line) => {
-        if (line.every( i => i == 0 )) {
-            return 0
-        }
-        if (line.every( i => i == 1 )) {
-            return 1
+        const [a,b,c] = line
+        if (a == b && b == c) {
+            return a
         }
         return null
     })
