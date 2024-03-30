@@ -3,9 +3,9 @@
     import { T, useTask, useThrelte } from '@threlte/core'
     import { RigidBody, CollisionGroups, Collider } from '@threlte/rapier'
     import { onDestroy } from 'svelte'
-    import { PerspectiveCamera, Vector3 } from 'three'
+    import { PerspectiveCamera, Raycaster, Vector2, Vector3 } from 'three'
   import OtherCameraControl from './OtherCameraControl.svelte';
-  
+
     export let position = [0, 10, 0]
     let radius = 0.3
     let height = 1.7
@@ -14,7 +14,7 @@
     let rigidBody: RapierRigidBody
     let lock: () => void
     let cam: PerspectiveCamera
-  
+
     let forward = 0
     let backward = 0
     let left = 0
@@ -50,6 +50,7 @@
     })
   
     function onKeyDown(e: KeyboardEvent) {
+
       switch (e.key) {
         case 's':
           backward = 1
@@ -83,9 +84,11 @@
           right = 0
           break
         default:
+            console.log(e.key)
           break
       }
     }
+
   </script>
   
   <svelte:window
@@ -93,7 +96,9 @@
     on:keyup={onKeyUp}
   />
   
-  <T.Group position.y={0.9}>
+  <T.Group 
+  on:pointermove={(e) => console.log('move')}
+  position.y={0.9}>
     <T.PerspectiveCamera
       makeDefault
       fov={90}

@@ -1,7 +1,8 @@
 <script lang="ts">
     import { createEventDispatcher, onDestroy } from 'svelte'
-    import { Euler, Camera } from 'three'
+    import { Euler, Camera, Vector2 } from 'three'
     import { useThrelte, useParent } from '@threlte/core'
+  import { sceneStore } from './store';
   
     // Set to constrain the pitch of the camera
     // Range is 0 to Math.PI radians
@@ -37,18 +38,29 @@
       dispatch('change')
     }
   
-    export const lock = () => domElement.requestPointerLock()
-    export const unlock = () => document.exitPointerLock()
-  
+    export const lock = () => {
+        domElement.requestPointerLock()
+        sceneStore.set({lock : true})
+        return;
+
+    }  
+    export const unlock = () =>{ 
+        document.exitPointerLock()
+        sceneStore.set({lock : false})
+    }
     domElement.addEventListener('mousemove', onMouseMove)
     domElement.ownerDocument.addEventListener('pointerlockchange', onPointerlockChange)
     domElement.ownerDocument.addEventListener('pointerlockerror', onPointerlockError)
   
     onDestroy(() => {
+        sceneStore.set({lock : false})
+
       domElement.removeEventListener('mousemove', onMouseMove)
       domElement.ownerDocument.removeEventListener('pointerlockchange', onPointerlockChange)
       domElement.ownerDocument.removeEventListener('pointerlockerror', onPointerlockError)
     })
+
+    let mousePos = new Vector2()
   
     function onMouseMove(event: MouseEvent) {
       if (!isLocked) return
@@ -71,8 +83,10 @@
     function onPointerlockChange() {
       if (document.pointerLockElement === domElement) {
         dispatch('lock')
+        sceneStore.set({lock: true})
         isLocked = true
       } else {
+        sceneStore.set({lock: false})
         dispatch('unlock')
         isLocked = false
       }
