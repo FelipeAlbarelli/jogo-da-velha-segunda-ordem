@@ -1,6 +1,7 @@
 <script lang="ts" >
     import { Canvas } from '@threlte/core'
-  import Test from './Test.svelte';
+  import Scene from './Scene.svelte';
+  
 
   export let width = 500; 
   export let height = 500; 
@@ -15,5 +16,5 @@
 <Canvas
   size={size}
 >
-  <Test></Test>
+  <Scene></Scene>
 </Canvas>
