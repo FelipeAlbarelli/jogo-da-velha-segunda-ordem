@@ -11,7 +11,7 @@ type NavState = {
 }
 
 export const navStore = writable<NavState>({
-    currId : mainTabs[0].id
+    currId : mainTabs[1].id
 });
 
 export const currTab = derived( navStore , ({currId}) => {

@@ -1,11 +1,15 @@
 <script lang="ts">
-  import MegaBoard from "../lib/MegaBoard.svelte";
+  import Canvas3D from "../lib/3d/Canvas3D.svelte";
+  import View3D from "../lib/3d/Canvas3D.svelte";
+import MegaBoard from "../lib/MegaBoard.svelte";
     import User from "../lib/User.svelte";
+  import { currTab } from "./navigation";
     export let p1InitName : string;
     export let p2InitName : string;
 
 </script>
 
+{#if $currTab.id == 'dom'  }
 <div class="card">
     <User 
       bind:name={p1InitName}
@@ -22,6 +26,10 @@
       --playerColor={30 + 180}  
     ></User>
 </div>
+{:else if  $currTab.id == '3d'}
+    <Canvas3D />
+{/if}
+
 
 
 
