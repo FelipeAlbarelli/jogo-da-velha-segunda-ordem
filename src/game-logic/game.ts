@@ -1,11 +1,12 @@
 import { Maybe } from "purify-ts";
 import { allWinningsIndexes } from "./matrix-helpers";
 
-export type CellState = PlayersIds | null;
-export type PlayersIds     = number;
+export type CellState  = 1 | 2 | null;
+export type PlayersIds = 1 | 2;
 
 export type Player = {
-    id: PlayersIds,
+    id: 1 | 2,
+    zodiacId: number,
     label: string,
     name: string
 }
@@ -17,7 +18,7 @@ export type Board = {
 }
 
 export const toggleState = (state : CellState) => Maybe.fromNullable(state)
-    .chainNullable( c => c == 0 ? 1 : 0 )
+    .chainNullable( c => c == 1 ? 2 : 1 )
     .extractNullable()
 
 export const getBoardProjections = ( board : Board[] ) => {

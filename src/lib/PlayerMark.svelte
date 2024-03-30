@@ -1,9 +1,5 @@
 <script lang="ts">
-  import { getLabelFromId } from "../game-logic/zodiac-heavenly-aritmetic";
 
-
-    export let id : number | null;
-    $: label = getLabelFromId(id ?? 0)
 </script>
 
 <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
@@ -14,7 +10,7 @@
     on:blur
     on:click
 >
-    {label}
+
 </p>
 
 <style>

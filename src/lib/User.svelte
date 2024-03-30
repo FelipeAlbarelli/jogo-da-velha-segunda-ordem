@@ -1,31 +1,22 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
   import { getNewPlayer } from "../game-logic/zodiac-heavenly-aritmetic";
-  import { createNewPlayerFromName, getMyObj as selectPlayer, playersStore } from "../store/players.store";
+  import { createNewPlayerFromName,  playersStore, getMyObj } from "../store/players.store";
   import type { Player } from "../game-logic/game";
   import PlayerMark from "./PlayerMark.svelte";
 
-  export let value  = '';
-  let myTurn = false;
+  export let name  = '';
+
   export let witchPlayer : 1 | 2;
-  let me : Player | null;
-  $: calc_named = me?.name ?? '--'
-  $: my_id = me?.id ?? 0
-  playersStore.subscribe( s => {
-    const myState = selectPlayer(s , witchPlayer)
-    me = myState;
-  })
 
+  $: myself = getMyObj( $playersStore ,witchPlayer)
+  $: myTurn  = myself?.id == $playersStore.turn;
 
-  playersStore.subscribe( ({turn}) => {
-    myTurn = turn == witchPlayer
-  })
-  
   const getReady = () => {
-    if (!value.length ) {
+    if (!name.length ) {
       return
     }
-    createNewPlayerFromName(value, witchPlayer)
+    createNewPlayerFromName(name, witchPlayer)
   }
 
 </script>
@@ -36,23 +27,21 @@
     class="card"
     class:myTurn={myTurn}
   >
-  {#if  me == null}
+  {#if myself == null}
     <input 
       type="text" 
       name="nome"
-      bind:value
+      bind:value={name}
       placeholder="Nome"
       on:input
     >
     <button 
-      disabled={value.length == 0}
+      disabled={name.length == 0}
       on:click={getReady}>
     Start</button>
     {:else}
-    <h4>{calc_named}</h4>
-    <PlayerMark
-      id={my_id}
-    />
+    <h4>{myself.name}</h4>
+    <p>{myself.label}</p>
     {/if}
   </div>
 

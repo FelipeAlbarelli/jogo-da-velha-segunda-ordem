@@ -6,7 +6,7 @@
   import StyleSliders from './lib/StyleSliders.svelte';
   import { Maybe } from 'purify-ts/Maybe';
   import Winner from './lib/Winner.svelte';
-  import { areBothReady, chooseFirstPlayerTurn, playersStore , winner} from './store/players.store';
+  import { chooseFirstPlayerTurn, playersStore, winnerPlayer } from './store/players.store';
 
   let saturation = 100
   let lightness  = 50
@@ -20,7 +20,7 @@
   let filter: number = 0.2
 
   playersStore.subscribe( s => {
-    const bothReady = areBothReady(s)
+    const bothReady = s.p1 != null && s.p2 != null;
     const currentTurn = s.turn
     if (bothReady && currentTurn == null) {
       chooseFirstPlayerTurn()
@@ -41,25 +41,19 @@
 
 <main>
 
-  {#if $winner === null}
+  {#if $winnerPlayer == null }
   <div class="card">
     <User 
-      bind:value={player0}
+      bind:name={player0}
       witchPlayer={1}
       --playerColor={30} 
     ></User>
     <div class="board-cont">
       <MegaBoard
       />
-      <!-- <StyleSliders 
-        bind:saturation
-        bind:hue
-        bind:filter
-        bind:lightness
-      /> -->
     </div>
     <User
-      bind:value={player1}
+      bind:name={player1}
       witchPlayer={2}
       --playerColor={30 + 180}  
     ></User>
@@ -68,7 +62,7 @@
   <Winner
     on:end={() => reset()}
   >
-    <h1> {$winner.label} {$winner.name} {$winner.label} </h1>
+    <h1> {$winnerPlayer.label} {$winnerPlayer.name} {$winnerPlayer.label} </h1>
   </Winner>
   {/if}
 

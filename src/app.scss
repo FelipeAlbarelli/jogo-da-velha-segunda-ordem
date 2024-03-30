@@ -88,3 +88,31 @@ button:disabled {
 }
 
 
+@keyframes rotating {
+  0% {
+    transform:  perspective(360px)  rotateY( 15deg) ;
+    // filter: brightness( calc(  var(--filter , 0) + 1  ) );
+  }
+  100% {
+    transform:  perspective(360px)  rotateY( -15deg) ;
+    filter: brightness( calc(  var(--filter , 0) + 1  ) );
+  }
+}
+
+@keyframes pump {
+  0% {
+    transform:  rotateZ(0) ;
+    // filter: brightness( calc(  var(--filter , 0) + 1  ) );
+  }
+  25% {
+    transform:  rotateZ(2deg) ;
+    // filter: brightness( calc(  var(--filter , 0) + 1  ) );
+  }
+  50% {
+    transform:  rotateZ(0) ;
+    // filter: brightness( calc(  var(--filter , 0) + 1  ) );
+  }
+  75% {
+    transform:  rotateZ(-2deg)
+  }
+}

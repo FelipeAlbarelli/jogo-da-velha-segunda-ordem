@@ -21,7 +21,11 @@
   },
   "dependencies": {
     "@fireworks-js/svelte": "^2.10.7",
+    "@threlte/core": "^7.2.1",
     "@tsparticles/svelte": "^3.0.0",
-    "purify-ts": "^2.0.3"
+    "@types/three": "^0.163.0",
+    "immer": "^10.0.4",
+    "purify-ts": "^2.0.3",
+    "three": "^0.163.0"
   }
 }
