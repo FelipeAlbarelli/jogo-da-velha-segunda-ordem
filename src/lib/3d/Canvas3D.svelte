@@ -1,20 +1,35 @@
 <script lang="ts" >
     import { Canvas } from '@threlte/core'
   import Scene from './Scene.svelte';
-  
+  import { Vector2 } from 'three';
+  export let mouse = new Vector2()
+  import { World } from '@threlte/rapier'
 
-  export let width = 500; 
-  export let height = 500; 
+  export let width = 1000; 
+  export let height = 750; 
 
   $: size = {
     width,
     height
   }
-
+  const handleMousemove = (e: MouseEvent ) => {
+    // console.log((e.target) )
+    mouse = new Vector2(e.movementX , e.movementY)
+}
 
   </script>
-<Canvas
-  size={size}
->
-  <Scene></Scene>
-</Canvas>
+
+<!-- svelte-ignore a11y-no-static-element-interactions -->
+<div
+  on:mousemove={handleMousemove}
+  class="container">
+  <Canvas
+    size={size}
+  >
+  <World>
+    <Scene
+      bind:mouse
+    ></Scene>
+  </World>
+  </Canvas>
+</div>
