@@ -1,14 +1,12 @@
 <script lang="ts">
   import User from './lib/User.svelte';
-  import Counter from './lib/Counter.svelte'
   import MegaBoard from './lib/MegaBoard.svelte';
-  import { toggleState, type CellState } from './game-logic/game';
-  import StyleSliders from './lib/StyleSliders.svelte';
-  import { Maybe } from 'purify-ts/Maybe';
   import Winner from './lib/Winner.svelte';
   import { startGame, playersStore, winnerPlayer, resetGame } from './store/players.store';
-  import Tabs from './navigation/Tabs.svelte';
   import { mainTabs, type Tab } from './navigation/constants';
+  import { currTab } from './navigation/navigation';
+  import TabsNavBar from './navigation/TabsNavBar.svelte';
+  import SimpleRouter from './navigation/SimpleRouter.svelte';
 
 
   let tabs = mainTabs
@@ -32,35 +30,27 @@
   })
 
 
+  currTab.subscribe( s => {
+    console.log(s)
+  } )
+
+
 </script>
 
 
   <div class="header">
-    <Tabs
+    <TabsNavBar
       tabs={mainTabs}
-    ></Tabs>
+    ></TabsNavBar>
   </div>
 
   <main>
-  
-  
+    
     {#if $winnerPlayer == null }
-    <div class="card">
-      <User 
-        bind:name={p1InitName}
-        witchPlayer={1}
-        --playerColor={30} 
-      ></User>
-      <div class="board-cont">
-        <MegaBoard
-        />
-      </div>
-      <User
-        bind:name={p2InitName}
-        witchPlayer={2}
-        --playerColor={30 + 180}  
-      ></User>
-    </div>
+    <SimpleRouter 
+      bind:p1InitName
+      bind:p2InitName
+    />
     {:else}
     <Winner
       on:end={() => resetGame()}
@@ -68,6 +58,7 @@
       <h1> {$winnerPlayer.label} {$winnerPlayer.name} {$winnerPlayer.label} </h1>
     </Winner>
     {/if}
+  
   
   </main>
   <div class="footer"></div>
@@ -95,11 +86,6 @@
   }
 
 
-  .card {
-    display: flex;
-    flex-direction: row;
-    gap: 32px;
-  }
 
   .board-cont {
     display: flex;
