@@ -6,7 +6,7 @@
     import { PerspectiveCamera, Raycaster, Vector2, Vector3 } from 'three'
   import OtherCameraControl from './OtherCameraControl.svelte';
 
-    export let position = [0, 10, 0]
+    export let position = [2, 1, 0]
     let radius = 0.3
     let height = 1.7
     export let speed = 6
@@ -107,7 +107,7 @@
       position.y={position[1]}
       position.z={position[2]}
       on:create={({ ref }) => {
-        ref.lookAt(new Vector3(0, 2, 0))
+        ref.lookAt(new Vector3(0, 1, 0))
       }}
     >
       <OtherCameraControl bind:lock />
