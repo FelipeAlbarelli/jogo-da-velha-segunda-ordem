@@ -1,11 +1,12 @@
 <script lang="ts" >
 	import { T,   useTask, useThrelte } from '@threlte/core'
-	import {  Grid } from '@threlte/extras';
+	import {  Grid  } from '@threlte/extras';
 	import { spring } from 'svelte/motion';
 	import { debugMsg, mouseMoveStore, setVectorToDebug } from './store';
 	import { Raycaster, Vector2, Vector3, type Intersection, Object3D, type Object3DEventMap, Mesh } from 'three';
-  import { Flex } from '@threlte/flex'
-	import { playersStore } from '../../store/players.store';
+  import { Flex , Box } from '@threlte/flex'
+	import { megaBoard, playersStore } from '../../store/players.store';
+	import Cell3D from './tic-tac-toe-objs/Cell3D.svelte';
 
     const scale = spring(1)
     const { renderer, camera , scene} = useThrelte()
@@ -53,14 +54,11 @@
         // console.log(e)
     })
     
-  playersStore
-  
-
 </script>
 
 <T.Group 
     position.x={-20}
-    position.y={0}
+    position.y={ 0}
     position.z={0}
   >
   <Grid
@@ -71,16 +69,30 @@
       sectionSize={3}
       gridSize={[27,27]}
   ></Grid>
-  <Flex
-    width={30}
-    height={30}
-  >
+
+  <T.Group
+    position.y={-10}
+    position.z={-10}
+  
+  > 
+  {#each $megaBoard as board (board.index) }
+  {@const index = board.index}
+  
+    <Cell3D
+      size={8}
+      y={board.helper3d.row * 10 }
+      z={board.helper3d.col * 10 }
+    />
+  
+
+  {/each}
+  </T.Group>
 
     <!-- ... -->
-  </Flex>
+
 </T.Group>
 
-<T.Mesh
+<!-- <T.Mesh
     bind:ref={thisMesh}
   position={[0,4,0]}
 >
@@ -99,4 +111,4 @@
 	<T.BoxGeometry
      args={[1, 2, 1]} />
 	<T.MeshStandardMaterial color="hotpink" />
-</T.Mesh>
+</T.Mesh> -->

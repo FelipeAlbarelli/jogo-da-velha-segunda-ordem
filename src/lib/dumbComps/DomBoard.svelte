@@ -1,6 +1,5 @@
 <script lang="ts">
   import { currentPlayer, makePlayerMove, megaBoard, playersStore } from "../../store/players.store";
-  import PlayerMark from "../PlayerMark.svelte";
   import Emoji from "./Emoji.svelte";
 
   megaBoard.subscribe( s => {

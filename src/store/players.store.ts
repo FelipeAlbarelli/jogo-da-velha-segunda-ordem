@@ -36,9 +36,13 @@ export const winnerPlayer = derived( playersStore , ({p1 ,p2 , board}) => {
 export const megaBoard = derived( playersStore , ({board , p1 , p2}) => {
     return board.map( board => ({
         ...board,
+        helper3d: {
+            row : Math.floor(board.index / 3),
+            col : board.index % 3
+        },
         player : Maybe.fromNullable(board.state)
             .chainNullable( state => getMyObj({p1, p2 } , state ))
-            .extractNullable() 
+            .extractNullable(),
     }))
 } )
 
