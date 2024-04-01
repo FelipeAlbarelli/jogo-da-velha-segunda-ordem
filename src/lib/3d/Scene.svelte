@@ -1,6 +1,6 @@
 <script lang="ts" >
 	import { T, useTask } from '@threlte/core'
-	import { interactivity } from '@threlte/extras'
+	import { Grid, interactivity } from '@threlte/extras'
 	import { spring } from 'svelte/motion'
 
   	import CameraCtr from './CameraCtr.svelte';
@@ -27,7 +27,16 @@
 
   </script>
   
+<Grid
+	position.y={0.5}
+    type="grid"
+    cellColor={'white'}
+    cellThickness={2}
+    gridSize={[25,25]}
+>
 
+
+</Grid>
   
   <T.DirectionalLight
 	position={[0, 10, 10]}
@@ -65,9 +74,8 @@
   
   <T.Mesh
 	rotation.x={-Math.PI / 2}
-	receiveShadow
   >
 	<T.CircleGeometry args={[20, 40]} />
-	<T.MeshStandardMaterial color="white" />
+	<T.MeshStandardMaterial transparent opacity="0.3" color="white" />
   </T.Mesh>
   

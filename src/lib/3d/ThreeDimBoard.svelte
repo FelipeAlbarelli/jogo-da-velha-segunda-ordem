@@ -3,7 +3,7 @@
 	import { interactivity, useCursor } from '@threlte/extras';
 	import { spring } from 'svelte/motion';
 	import { debugMsg, mouseMoveStore, setVectorToDebug } from './store';
-	import { Raycaster, Vector2, Vector3, type Intersection, Object3D, type Object3DEventMap } from 'three';
+	import { Raycaster, Vector2, Vector3, type Intersection, Object3D, type Object3DEventMap, Mesh } from 'three';
 
     const scale = spring(1)
     const { renderer, camera , scene} = useThrelte()
@@ -15,25 +15,29 @@
     const pointer = new Vector2(0,0)
 
 
+    let thisMesh : Mesh
+
+
     let intersects : Intersection<Object3D<Object3DEventMap>>[] = []
 
 
     useTask( (delta) => {
         for ( let i = 0; i < intersects.length; i ++ ) {
-
-            intersects[ i ].object.rotateZ(delta)
+            const obj = intersects[ i ].object
+            obj.rotateY(delta)
             
         }
     })
 
 
     mouseMoveStore.subscribe( event => {
+        if (!thisMesh) return
 
         $camera.getWorldDirection(camDire)
 
         raycaster.setFromCamera( pointer, $camera );
 
-        intersects = raycaster.intersectObjects(scene.children );
+        intersects = raycaster.intersectObjects(thisMesh.children );
 
         // for ( let i = 0; i < intersects.length; i ++ ) {
 
@@ -52,8 +56,10 @@
     
 </script>
 
-<T.Mesh
 
+
+<T.Mesh
+    bind:ref={thisMesh}
   position={[0,4,0]}
 >
   <T.MeshStandardMaterial color="blue" />

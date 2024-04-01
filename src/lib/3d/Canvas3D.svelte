@@ -5,7 +5,7 @@
   export let mouse = new Vector2()
   import { World } from '@threlte/rapier'
   import { sceneStore } from './store';
-	import { interactivity } from '@threlte/extras';
+	import { Grid, interactivity } from '@threlte/extras';
 
   export let width = 1000; 
   export let height = 750; 
@@ -25,8 +25,9 @@
     size={size}
   >
   <World>
-    <Scene
-    ></Scene>
+
+      <Scene
+      ></Scene>
   </World>
   </Canvas>
   {#if $sceneStore.lock }
