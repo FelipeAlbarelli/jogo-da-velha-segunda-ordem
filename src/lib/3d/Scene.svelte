@@ -1,6 +1,6 @@
 <script lang="ts" >
 	import { T, useTask } from '@threlte/core'
-	import { Grid, interactivity } from '@threlte/extras'
+	import { Gizmo, Grid, interactivity } from '@threlte/extras'
 	import { spring } from 'svelte/motion'
 
   import Player from './Player.svelte';
@@ -23,8 +23,8 @@
 
   </script>
   
-<Grid
-	position.y={1}
+<!-- <Grid
+	position.y={0}
     type="grid"
     cellColor={'white'}
     cellThickness={2}
@@ -32,7 +32,7 @@
 >
 
 
-</Grid>
+</Grid> -->
   
   <T.DirectionalLight
 	position={[20, 20, 20]}
@@ -40,10 +40,12 @@
   />
 
   <Player
-	positionFixed={true}
+	positionFixed={false}
   ></Player>
 
+    <Gizmo
 
+    />
 
 <T.Mesh
 	position={[0,0,0]}

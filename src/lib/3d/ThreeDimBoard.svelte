@@ -1,6 +1,6 @@
 <script lang="ts" >
 	import { T, useTask, useThrelte } from '@threlte/core'
-	import { interactivity, useCursor } from '@threlte/extras';
+	import {  Grid } from '@threlte/extras';
 	import { spring } from 'svelte/motion';
 	import { debugMsg, mouseMoveStore, setVectorToDebug } from './store';
 	import { Raycaster, Vector2, Vector3, type Intersection, Object3D, type Object3DEventMap, Mesh } from 'three';
@@ -46,10 +46,7 @@
         //     material.color.set( 0xff0000 );
 
         // }
-        debugMsg.update( prev => ({...prev , 
-            'pointX' : pointer.x,
-            'pointY' : pointer.y,
-        }))
+
         // setVectorToDebug( 'camDire' , camDire)
         // console.log(e)
     })
@@ -57,7 +54,20 @@
 </script>
 
 
+<Grid
+	position.x={-20}
+	position.y={0}
+    position.z={0}
+    plane="zy"
+    type="grid"
+    cellColor={'white'}
+    cellThickness={1}
+    sectionSize={3}
+    gridSize={[27,27]}
+>
 
+
+</Grid>
 <T.Mesh
     bind:ref={thisMesh}
   position={[0,4,0]}

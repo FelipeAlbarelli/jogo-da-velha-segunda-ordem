@@ -6,6 +6,7 @@
     import { PerspectiveCamera, Raycaster, Vector2, Vector3 } from 'three'
   import OtherCameraControl from './OtherCameraControl.svelte';
 	import Ground from './Ground.svelte';
+	import { debugMsg } from './store';
 
     export let position = [4, 1, 0]
     export let createGround = true
@@ -55,6 +56,11 @@
       // when body position changes update position prop for camera
       const pos = rigidBody.translation()
       position = [pos.x, pos.y, pos.z]
+
+        debugMsg.update( prev => ({...prev , 
+            'posX' : pos.x,
+            'posY' : pos.y,
+        }))
 
     })
   
@@ -152,7 +158,7 @@
 
   <Ground 
     invisible={true}
-    dim={[25, 25]}
+    dim={[100, 100]}
   />
 
     
