@@ -2,12 +2,13 @@
     import { createEventDispatcher, onDestroy } from 'svelte'
     import { Euler, Camera, Vector2 } from 'three'
     import { useThrelte, useParent } from '@threlte/core'
-  import { sceneStore } from './store';
+  import { mouseMoveStore, sceneStore, setMouseLock } from './store';
+  import { spring } from 'svelte/motion';
   
     // Set to constrain the pitch of the camera
     // Range is 0 to Math.PI radians
     export let minPolarAngle = 0 // radians
-    export let maxPolarAngle = Math.PI // radians
+    export let maxPolarAngle = Math.PI   // radians
     export let pointerSpeed = 1.0
   
     let isLocked = false
@@ -40,27 +41,50 @@
   
     export const lock = () => {
         domElement.requestPointerLock()
-        sceneStore.set({lock : true})
+        setMouseLock(true)
         return;
 
     }  
     export const unlock = () =>{ 
         document.exitPointerLock()
-        sceneStore.set({lock : false})
+        setMouseLock(false)
     }
     domElement.addEventListener('mousemove', onMouseMove)
     domElement.ownerDocument.addEventListener('pointerlockchange', onPointerlockChange)
     domElement.ownerDocument.addEventListener('pointerlockerror', onPointerlockError)
   
     onDestroy(() => {
-        sceneStore.set({lock : false})
-
+        setMouseLock(false)
       domElement.removeEventListener('mousemove', onMouseMove)
       domElement.ownerDocument.removeEventListener('pointerlockchange', onPointerlockChange)
       domElement.ownerDocument.removeEventListener('pointerlockerror', onPointerlockError)
     })
 
     let mousePos = new Vector2()
+
+    const eulerX = spring(0)
+    const eulerY = spring(0)
+
+    $: eulerXY = [$eulerX , $eulerY]
+    $: {
+        _euler.y -= eulerXY[1] * 0.002
+        _euler.x -= eulerXY[0] * 0.002
+        sceneStore.update( prev => ({
+            ...prev,
+            euler: new Vector2($eulerX , $eulerY)
+        }))
+        if ($camera) {
+            $camera.quaternion.setFromEuler(_euler)
+  
+            onChange()
+        }
+
+    //   _euler.y = Math.max(_PI_2 - maxPolarAngle, Math.min(_PI_2 - minPolarAngle, _euler.y))
+  
+    //   _euler.x = Math.max(_PI_2 - maxPolarAngle, Math.min(_PI_2 - minPolarAngle, _euler.x))
+  
+
+    }
   
     function onMouseMove(event: MouseEvent) {
       if (!isLocked) return
@@ -69,24 +93,37 @@
       const { movementX, movementY } = event
   
       _euler.setFromQuaternion($camera.quaternion)
+
+      eulerX.set(movementY * pointerSpeed)
+      eulerY.set(movementX * pointerSpeed)
+
+      mouseMoveStore.set(event)
   
-      _euler.y -= movementX * 0.002 * pointerSpeed
-      _euler.x -= movementY * 0.002 * pointerSpeed
+    //   _euler.y -= $eulerY * 0.002
+    //   _euler.x -= $eulerX * 0.002
+    //     sceneStore.update( prev => ({
+    //         ...prev,
+    //         euler: new Vector2($eulerX , $eulerY)
+    //     }))
+
+    // //   _euler.y = Math.max(_PI_2 - maxPolarAngle, Math.min(_PI_2 - minPolarAngle, _euler.y))
   
-      _euler.x = Math.max(_PI_2 - maxPolarAngle, Math.min(_PI_2 - minPolarAngle, _euler.x))
+    // //   _euler.x = Math.max(_PI_2 - maxPolarAngle, Math.min(_PI_2 - minPolarAngle, _euler.x))
   
-      $camera.quaternion.setFromEuler(_euler)
+    //   $camera.quaternion.setFromEuler(_euler)
   
-      onChange()
+    //   onChange()
     }
   
     function onPointerlockChange() {
       if (document.pointerLockElement === domElement) {
         dispatch('lock')
-        sceneStore.set({lock: true})
+        setMouseLock(true)
+
         isLocked = true
       } else {
-        sceneStore.set({lock: false})
+        setMouseLock(false)
+
         dispatch('unlock')
         isLocked = false
       }

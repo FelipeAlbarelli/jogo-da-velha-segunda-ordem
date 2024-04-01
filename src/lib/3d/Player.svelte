@@ -2,14 +2,16 @@
     import type { RigidBody as RapierRigidBody } from '@dimforge/rapier3d-compat'
     import { T, useTask, useThrelte } from '@threlte/core'
     import { RigidBody, CollisionGroups, Collider } from '@threlte/rapier'
-    import { onDestroy } from 'svelte'
+    import { onDestroy, onMount } from 'svelte'
     import { PerspectiveCamera, Raycaster, Vector2, Vector3 } from 'three'
   import OtherCameraControl from './OtherCameraControl.svelte';
 
-    export let position = [2, 1, 0]
+    export let position = [4, 1, 0]
     let radius = 0.3
     let height = 1.7
     export let speed = 6
+
+    export let positionFixed = false;
   
     let rigidBody: RapierRigidBody
     let lock: () => void
@@ -32,8 +34,12 @@
       renderer.domElement.removeEventListener('click', lockControls)
     })
   
+    onMount( () => {
+
+    })
+
     useTask(() => {
-      if (!rigidBody) return
+      if (!rigidBody || positionFixed) return
       // get direction
       const velVec = t.fromArray([right - left, 0, backward - forward])
       // sort rotate and multiply by speed
@@ -47,6 +53,7 @@
       // when body position changes update position prop for camera
       const pos = rigidBody.translation()
       position = [pos.x, pos.y, pos.z]
+
     })
   
     function onKeyDown(e: KeyboardEvent) {
@@ -101,7 +108,7 @@
   position.y={0.9}>
     <T.PerspectiveCamera
       makeDefault
-      fov={90}
+      fov={50}
       bind:ref={cam}
       position.x={position[0]}
       position.y={position[1]}

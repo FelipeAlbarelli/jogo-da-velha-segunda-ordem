@@ -1,6 +1,5 @@
 <script lang="ts">
   import Canvas3D from "../lib/3d/Canvas3D.svelte";
-  import View3D from "../lib/3d/Canvas3D.svelte";
 import MegaBoard from "../lib/MegaBoard.svelte";
     import User from "../lib/User.svelte";
   import { currTab } from "./navigation";
@@ -27,6 +26,7 @@ import MegaBoard from "../lib/MegaBoard.svelte";
     ></User>
 </div>
 {:else if  $currTab.id == '3d'}
+
     <Canvas3D />
 {/if}
 

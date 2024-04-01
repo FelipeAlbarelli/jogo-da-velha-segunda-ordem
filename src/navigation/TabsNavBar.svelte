@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { allDebugMsgs, mouseMoveStore, sceneStore } from "../lib/3d/store";
     import type { Tab } from "./constants";
   import { changeTab } from "./navigation";
     export let tabs : Tab[]
@@ -16,9 +17,22 @@
     </button>
     {/each}
 </nav>
+<!-- <p>{$sceneStore.euler.x} {$sceneStore.euler.y}</p> -->
 
+<div class="debug-info">
+    {#each $allDebugMsgs as info }
+    <div class="info">
+        <p>{info[0]}:</p> <p>{info[1]}</p>
+    </div>
+    {/each}
+</div>
 
 <style>
+.debug-info {
+    display: flex;
+    flex-direction: row;
+    
+}
     .tabs-cont {
         padding: 12px;
         gap: 8px;
