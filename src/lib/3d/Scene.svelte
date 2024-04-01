@@ -3,11 +3,7 @@
 	import { Grid, interactivity } from '@threlte/extras'
 	import { spring } from 'svelte/motion'
 
-  	import CameraCtr from './CameraCtr.svelte';
   import Player from './Player.svelte';
-  import { Collider, RigidBody } from '@threlte/rapier';
-  import { DEG2RAD } from 'three/src/math/MathUtils.js';
-  import Ground from './Ground.svelte';
 	import ThreeDimBoard from './ThreeDimBoard.svelte';
 	
 	interactivity()
@@ -28,7 +24,7 @@
   </script>
   
 <Grid
-	position.y={0.5}
+	position.y={1}
     type="grid"
     cellColor={'white'}
     cellThickness={2}
@@ -39,21 +35,21 @@
 </Grid>
   
   <T.DirectionalLight
-	position={[0, 10, 10]}
+	position={[20, 20, 20]}
 	castShadow
   />
 
   <Player
-	positionFixed={false}
+	positionFixed={true}
   ></Player>
-  <Ground />
 
-	<T.Mesh
-		position={[0,0,0]}
-	>
-		<ThreeDimBoard />
-	
-	</T.Mesh>
+
+
+<T.Mesh
+	position={[0,0,0]}
+>
+	<ThreeDimBoard />
+</T.Mesh>
 
 
 	  <!-- <T.Mesh
@@ -72,10 +68,10 @@
 		<T.MeshStandardMaterial color="hotpink" />
 	  </T.Mesh> -->
   
-  <T.Mesh
+  <!-- <T.Mesh
 	rotation.x={-Math.PI / 2}
   >
 	<T.CircleGeometry args={[20, 40]} />
-	<T.MeshStandardMaterial transparent opacity="0.3" color="white" />
+	<T.MeshStandardMaterial transparent opacity="0.1" color="white" />
   </T.Mesh>
-  
+   -->

@@ -5,8 +5,10 @@
     import { onDestroy, onMount } from 'svelte'
     import { PerspectiveCamera, Raycaster, Vector2, Vector3 } from 'three'
   import OtherCameraControl from './OtherCameraControl.svelte';
+	import Ground from './Ground.svelte';
 
     export let position = [4, 1, 0]
+    export let createGround = true
     let radius = 0.3
     let height = 1.7
     export let speed = 6
@@ -133,7 +135,7 @@
         />
       </CollisionGroups>
   
-      <CollisionGroups groups={[15]}>
+      <!-- <CollisionGroups groups={[15]}>
         <T.Group position={[0, -height / 2 + radius, 0]}>
           <Collider
             sensor
@@ -141,7 +143,17 @@
             args={[radius * 1.2]}
           />
         </T.Group>
-      </CollisionGroups>
+      </CollisionGroups> -->
     </RigidBody>
   </T.Group>
   
+
+  {#if createGround }
+
+  <Ground 
+    invisible={true}
+    dim={[25, 25]}
+  />
+
+    
+  {/if}

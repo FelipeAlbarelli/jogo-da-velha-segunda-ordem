@@ -25,7 +25,6 @@
     size={size}
   >
   <World>
-
       <Scene
       ></Scene>
   </World>
