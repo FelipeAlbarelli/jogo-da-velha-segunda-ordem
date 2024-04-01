@@ -1,10 +1,24 @@
 <script lang="ts">
     import { T  } from  '@threlte/core'
+	import { quadOut } from 'svelte/easing';
+	import { tweened } from 'svelte/motion';
 	import { Vector2, Vector3 } from 'three';
+	import { debugMsg } from '../store';
     export let y = 0 , z = 0;
 
     export let size = 9;
   const pulsePosition = new Vector3()
+
+      const pulseTimer = tweened(0.1 )
+
+    pulseTimer.set( 100 , {
+        duration : 100_000
+    });
+
+
+    pulseTimer.subscribe( s => {
+        debugMsg.update( prev => ({...prev, pulseTimer : s}) )
+    })
   let vertexShader = `
         void main() {
             gl_FragColor = vec4(1.0,0.0,1.0,1.0);
@@ -14,11 +28,12 @@
         #ifdef GL_ES
         precision mediump float;
         #endif
-
-        uniform float u_time;
+        uniform vec2 u_resolution;  // Canvas size (width,height)
+        uniform vec2 u_mouse;       // mouse position in screen pixels
+        uniform float pulseTimer;       // Time in seconds since load
 
         void main() {
-            gl_FragColor = vec4(1.0, 1, 1.0, 1.0);
+            gl_FragColor = vec4(abs(sin(pulseTimer)),0.0,0.0,1.0);
         }
 
      `
@@ -41,6 +56,7 @@
         value: pulsePosition
       }
     }}
+    uniforms.pulseTimer.value={$pulseTimer  ?? 0 }
     fragmentShader={frag}
   />
 </T.Mesh>
