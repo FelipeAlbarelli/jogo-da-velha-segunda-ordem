@@ -16,9 +16,6 @@
         >{tab.label}
     </button>
     {/each}
-</nav>
-<!-- <p>{$sceneStore.euler.x} {$sceneStore.euler.y}</p> -->
-
 <div class="debug-info">
     {#each $allDebugMsgs as info }
     <div class="info">
@@ -26,8 +23,15 @@
     </div>
     {/each}
 </div>
+</nav>
+<!-- <p>{$sceneStore.euler.x} {$sceneStore.euler.y}</p> -->
+
 
 <style>
+.info {
+    display: flex;
+    flex-direction: row;
+}
 .debug-info {
     display: flex;
     flex-direction: row;
