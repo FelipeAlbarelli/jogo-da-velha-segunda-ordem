@@ -1,20 +1,22 @@
 <script lang="ts">
-    import { T  } from  '@threlte/core'
+    import { T , useLoader } from  '@threlte/core'
 	import { quadOut } from 'svelte/easing';
 	import { tweened } from 'svelte/motion';
 	import { BoxGeometry, ShaderMaterial, TorusGeometry, Vector2, Vector3 } from 'three';
 	import { debugMsg } from '../store';
+  import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 
     import fragShader from '../../../shaders/frag.glsl?raw'
     import vertexShader from '../../../shaders/vertex.glsl?raw'
     import vertexShader2 from '../../../shaders/vertex2.glsl?raw'
-	import TabsNavBar from '../../../navigation/TabsNavBar.svelte';
+	import CellModel from './CellModel.svelte';
     export let y = 0 , z = 0;
 
     export let size = 9;
-  const pulsePosition = new Vector3()
+    export let depth  = 1;
+    const pulsePosition = new Vector3()
 
-      const pulseTimer = tweened(0.1 )
+    const pulseTimer = tweened(0.1 )
 
     pulseTimer.set( 100 , {
         duration : 100_000
@@ -24,7 +26,8 @@
     pulseTimer.subscribe( s => {
         debugMsg.update( prev => ({...prev, pulseTimer : s}) )
     })
-    const geometry = new BoxGeometry(0.5 , 5 , 5 , 20 , 20 , 20) 
+    const geometry = new BoxGeometry(0.5 , depth , 5 , 20 , 20 , 20)
+
     const geometry2 = new TorusGeometry(3 , 2 , 10 ) 
 
     geometry.computeVertexNormals()
@@ -41,7 +44,11 @@
 </script>
 
 
-<T.Mesh
+<CellModel>
+</CellModel>
+
+<!-- Shader -->
+<!-- <T.Mesh
     position.y={y }
     position.z={ z  }
     geometry={geometry}
@@ -63,4 +70,4 @@
     vertextShader={vertexShader}
     fragmentShader={fragShader}
   />
-</T.Mesh>
+</T.Mesh> -->

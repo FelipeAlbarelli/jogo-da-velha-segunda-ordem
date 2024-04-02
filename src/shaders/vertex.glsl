@@ -41,9 +41,14 @@ return ortho(-1.,1.,w/2.,-w/2.,w*aspect/2.,-w*aspect/2.)*translate(vec3(pos,0));
 }
 
 void main(){
+vPosition=(modelMatrix*vec4(position,1.)).xyz;
 
-float timeSin=1.+(sin(pulseTimer)*.5);
-vec4 modelPosition=modelMatrix*vec4(position,timeSin);
+float timeSin=1.+(sin(pulseTimer*5.)*.1);
+float timeMod=((mod(pulseTimer,2.))*.1)+.5;
+
+float superficieVar=(1.-uv.x)+(1.-uv.y);
+
+vec4 modelPosition=modelMatrix*vec4(position,1);
 float timeCos=1.+(cos(pulseTimer)*.5);
 
 vec4 newModelPos=modelPosition;
@@ -54,5 +59,4 @@ vec4 projectedPosition=projectionMatrix*viewPosition;
 // gl_Position=projectedPosition
 gl_Position=vec4(projectedPosition.x,projectedPosition.yzw);
 vUv=uv;
-vPosition=(modelMatrix*vec4(position,1.)).xyz;
 }
