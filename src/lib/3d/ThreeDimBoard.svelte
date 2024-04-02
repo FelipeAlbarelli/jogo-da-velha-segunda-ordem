@@ -28,6 +28,7 @@
         for ( let i = 0; i < intersects.length; i ++ ) {
             const obj = intersects[ i ].object
             obj.rotateY(delta)
+            debugMsg.update( prev => ({...prev , obj : obj.getWorldPosition(new Vector3()).x  } ) )
             
         }
     })
@@ -71,7 +72,9 @@
       gridSize={[27,27]}
   ></Grid>
 
-  <T.Group
+  <T.Mesh
+    bind:ref={thisMesh}
+  
     position.y={-10}
     position.z={-10}
   
@@ -87,7 +90,7 @@
   
 
   {/each}
-  </T.Group>
+  </T.Mesh>
 
     <!-- ... -->
 

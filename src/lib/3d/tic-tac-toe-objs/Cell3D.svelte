@@ -10,6 +10,7 @@
     import vertexShader from '../../../shaders/vertex.glsl?raw'
     import vertexShader2 from '../../../shaders/vertex2.glsl?raw'
 	import CellModel from './CellModel.svelte';
+	import { DEG2RAD } from 'three/src/math/MathUtils.js';
     export let y = 0 , z = 0;
 
     export let size = 9;
@@ -43,9 +44,19 @@
 
 </script>
 
+<T.Mesh
 
-<CellModel>
-</CellModel>
+  position.y={y }
+  position.z={ z  }
+  rotation.x={ 0 }
+  rotation.y={ 0 }
+  rotation.z={ 90 * DEG2RAD }
+>
+  <CellModel
+    size={2}
+  >
+  </CellModel>
+</T.Mesh>
 
 <!-- Shader -->
 <!-- <T.Mesh

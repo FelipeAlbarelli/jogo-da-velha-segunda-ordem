@@ -11,6 +11,7 @@ Command: npx @threlte/gltf@0.0.5 Flower.glb
   import { useGltf } from '@threlte/extras'
 
   export const ref = new Group()
+  export let size = 1;
 
 
   const component = forwardEventHandlers()
@@ -20,7 +21,7 @@ Command: npx @threlte/gltf@0.0.5 Flower.glb
   {#await gltf}
     <slot name="fallback" />
   {:then gltf}
-    <T.Mesh geometry={gltf.nodes.Cube.geometry} material={gltf.materials['Material.001']} scale={[1, 0.2, 1]} />
+    <T.Mesh geometry={gltf.nodes.Cube.geometry} material={gltf.materials['Material.001']} scale={[2 * size, 0.4 * size, 2 * size]} />
   {:catch error}
     <slot name="error" {error} />
   {/await}

@@ -1,6 +1,6 @@
 <script lang="ts" >
 	import { T, useTask } from '@threlte/core'
-	import { Gizmo, Grid, interactivity } from '@threlte/extras'
+	import { Gizmo, Grid, interactivity , Stars} from '@threlte/extras'
 	import { spring } from 'svelte/motion'
 
   import Player from './Player.svelte';
@@ -33,7 +33,9 @@
 
 
 </Grid> -->
-  
+<Stars 
+	
+/>
   <T.DirectionalLight
 	position={[20, 20, 20]}
 	castShadow
