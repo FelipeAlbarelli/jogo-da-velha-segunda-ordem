@@ -7,6 +7,7 @@
 
     import fragShader from '../../../shaders/frag.glsl?raw'
     import vertexShader from '../../../shaders/vertex.glsl?raw'
+    import vertexShader2 from '../../../shaders/vertex2.glsl?raw'
 	import TabsNavBar from '../../../navigation/TabsNavBar.svelte';
     export let y = 0 , z = 0;
 
@@ -23,7 +24,7 @@
     pulseTimer.subscribe( s => {
         debugMsg.update( prev => ({...prev, pulseTimer : s}) )
     })
-    const geometry = new BoxGeometry(0.5 , 5 , 5) 
+    const geometry = new BoxGeometry(0.5 , 5 , 5 , 20 , 20 , 20) 
     const geometry2 = new TorusGeometry(3 , 2 , 10 ) 
 
     geometry.computeVertexNormals()
