@@ -4,6 +4,8 @@
 	import { tweened } from 'svelte/motion';
 	import { Vector2, Vector3 } from 'three';
 	import { debugMsg } from '../store';
+
+    import fragShader from '../../../shaders/frag.glsl?raw'
     export let y = 0 , z = 0;
 
     export let size = 9;
@@ -57,6 +59,6 @@
       }
     }}
     uniforms.pulseTimer.value={$pulseTimer  ?? 0 }
-    fragmentShader={frag}
+    fragmentShader={fragShader}
   />
 </T.Mesh>
